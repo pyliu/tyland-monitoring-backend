@@ -1,8 +1,8 @@
 const path = require("path");
 const config = require(path.join(__dirname, "..", "config"));
 const utils = require(path.join(__dirname, "..", "utils"));
-const { Worker } = require("worker_threads");
 const StatusCodes = require("http-status-codes").StatusCodes;
+const { Worker } = require("worker_threads");
 const { isEmpty } = require("lodash");
 
 module.exports.register = (app) => {

@@ -2,12 +2,13 @@ const fs = require("fs-extra");
 const path = require("path");
 const isEmpty = require("lodash/isEmpty");
 const config = require(path.join(__dirname, "config.js"));
-const MongoClient = require("mongodb").MongoClient;
 
 const __basename = path.basename(__filename);
 
 module.exports = async function () {
   fs.ensureDirSync(path.join(__dirname, "..", config.uploadPath));
+  fs.ensureDirSync(path.join(__dirname, "..", config.dbPath));
+  fs.ensureDirSync(path.join(__dirname, "..", config.keyPath));
   // const client = new MongoClient(config.connUri);
   try {
     // await client.connect();
@@ -24,6 +25,5 @@ module.exports = async function () {
   } catch (e) {
     console.error(__basename, "❗ 處理初始化執行期間錯誤", e);
   } finally {
-    await client.close();
   }
 }

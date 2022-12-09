@@ -9,7 +9,7 @@ const cors = require("cors");
 const path = require("path");
 const fs = require("fs-extra");
 
-// const dirName = config.uploadPath;
+const dirName = config.uploadPath;
 require("./model/initialize")();
 
 const app = express();
@@ -39,11 +39,11 @@ const credentials = { key: privateKey, cert: certificate};
 
 const httpsServer = https.createServer(credentials, app);
 
-httpsServer.listen(process.env.SVR_PORT || 6378, () => {
-  console.log(`伺服器已於 ${process.env.SVR_PORT || 6378} 埠號啟動。`);
+httpsServer.listen(process.env.SVR_PORT || 8082, () => {
+  console.log(`LAH MONITORING 伺服器已於 ${process.env.SVR_PORT || 8083} 埠號啟動。`);
 });
 
-// const SERVER_PORT = process.env.SVR_PORT || 6378;
+// const SERVER_PORT = process.env.SVR_PORT || 8082;
 // app.listen(SERVER_PORT, () => {
 //   console.log(`伺服器已於 ${SERVER_PORT} 埠號啟動。`);
 // });
