@@ -4,7 +4,6 @@ const __basename = path.basename(__filename);
 const { parentPort } = require("worker_threads");
 const si = require('systeminformation');
 
-
 parentPort.on("message", async (postBody) => {
   config.isDev && console.log("GET /cpu request", postBody);
   let response = {
