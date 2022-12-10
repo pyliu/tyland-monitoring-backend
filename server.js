@@ -40,7 +40,7 @@ const credentials = { key: privateKey, cert: certificate};
 const httpsServer = https.createServer(credentials, app);
 
 httpsServer.listen(process.env.SVR_PORT || 8082, () => {
-  console.log(`LAH MONITORING 伺服器已於 ${process.env.SVR_PORT || 8083} 埠號啟動。`);
+  console.log(`LAH MONITORING 伺服器已於 ${process.env.SVR_PORT || 8082} 埠號啟動。`);
 });
 
 // const SERVER_PORT = process.env.SVR_PORT || 8082;
