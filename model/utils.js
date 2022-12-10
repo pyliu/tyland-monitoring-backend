@@ -40,13 +40,13 @@ const sleep = function (ms = 0) {
 }
 
 const authenticate = async function (authHeader) {
+  return true;
   if (isEmpty(authHeader) || !authHeader.startsWith("Bearer ")) {
     config.isDev && console.warn('⚠ 找不到 Authorization 表頭', authHeader);
     return false;
   }
   // const hash = authHeader.replace("Bearer ", "");
   try {
-    return true;
     // await client.connect();
     // config.isDev && console.log(__basename, "✔ DB已連線");
     // const userCollection = client.db().collection(config.userCollection);
