@@ -30,7 +30,7 @@ app.use(express.json({limit : parseInt(process.env.UPLOAD_LIMIT) })); // allow m
  /**
   * SystemInformation CPU API
   */
-  const siCpuAPI = require('./model/api/system/cpu');
+  const siCpuAPI = require(`./model/api/${config.apiVersion}/system/cpu`);
   siCpuAPI.register(app);
 /**
  * Upload API

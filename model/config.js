@@ -1,7 +1,8 @@
 const config = {
   isDev: process.env.NODE_ENV !== 'production',
   isProd: process.env.NODE_ENV === 'production',
-  apiPrefix: '/api/v1',
+  apiPrefix: 'api',
+  apiVersion: 'v1',
   keyPath: 'key',
   dbPath: 'db',
   uploadPath: 'upload',

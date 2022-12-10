@@ -1,5 +1,5 @@
 const path = require("path");
-const config = require(path.join(__dirname, "..", "..", "..", "config"));
+const config = require(path.join(__dirname, "..", "..", "..", "..", "config"));
 const __basename = path.basename(__filename);
 const { parentPort } = require("worker_threads");
 const si = require('systeminformation');
