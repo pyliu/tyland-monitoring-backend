@@ -27,11 +27,16 @@ app.use(express.json({limit : parseInt(process.env.UPLOAD_LIMIT) })); // allow m
  */
  const authAPI = require('./model/api/auth');
  authAPI.register(app);
+ /**
+  * SystemInformation CPU API
+  */
+  const siCpuAPI = require('./model/api/system/cpu');
+  siCpuAPI.register(app);
 /**
  * Upload API
  */
-const uploadAPI = require('./model/api/upload');
-uploadAPI.register(app);
+// const uploadAPI = require('./model/api/upload');
+// uploadAPI.register(app);
 
 const privateKey  = fs.readFileSync(path.resolve(__dirname, 'key', config.isProd ? 'server.key' : 'localhost-key.pem'));
 const certificate = fs.readFileSync(path.resolve(__dirname, 'key', config.isProd ? 'server.crt' : 'localhost.pem'));

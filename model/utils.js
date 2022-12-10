@@ -1,7 +1,8 @@
 const path = require("path");
-const __basename = path.basename(__filename);
 const isEmpty = require('lodash/isEmpty')
+const __basename = path.basename(__filename);
 const config = require(path.join(__dirname, "config"));
+const HTTPStatusCodes = require("http-status-codes").StatusCodes;
 
 const trim = (x) => { return typeof x === 'string' ? x.replace(/^[\s\r\n]+|[\s\r\n]+$/gm, '') : '' }
 
@@ -78,9 +79,17 @@ const authenticate = async function (authHeader) {
   return false;
 }
 
+const badRequest = function (res, message, statusCode) {
+  res && res.status(HTTPStatusCodes.BAD_REQUEST).send({
+    statusCode: statusCode ? statusCode : config.statusCode.FAIL,
+    message: message ? message : "❌ 連線伺服器失敗"
+  });
+}
+
 module.exports.timestamp = timestamp
 module.exports.timestampToDate = timestampToDate
 module.exports.trim = trim
 module.exports.sleep = sleep
 module.exports.isEmpty = isEmpty
 module.exports.authenticate = authenticate
+module.exports.badRequest = badRequest

@@ -29,7 +29,8 @@
     "https": "^1.0.0",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
-    "sqlite3": "^5.1.2"
+    "sqlite3": "^5.1.2",
+    "systeminformation": "^5.16.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.13"
