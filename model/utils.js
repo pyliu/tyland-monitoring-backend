@@ -3,6 +3,7 @@ const isEmpty = require('lodash/isEmpty')
 const __basename = path.basename(__filename);
 const config = require(path.join(__dirname, "config"));
 const HTTPStatusCodes = require("http-status-codes").StatusCodes;
+const { Worker } = require("worker_threads");
 
 const Cache = require('file-system-cache').default;
 const fsCache = Cache({
@@ -92,6 +93,15 @@ const badRequest = function (res, message, statusCode) {
   });
 }
 
+const registerWorker = function (res, worker, params = {}) {
+  // listen to message to wait response from worker
+  worker?.on("message", (data) => {
+    res.status(data.statusCode <= config.statusCode.FAIL ? HTTPStatusCodes.NOT_ACCEPTABLE : HTTPStatusCodes.OK).send({ ...data });
+  });
+  // post data to worker thread
+  worker?.postMessage(params);
+}
+
 module.exports = {
   timestamp,
   timestampToDate,
@@ -99,6 +109,7 @@ module.exports = {
   sleep,
   isEmpty,
   authenticate,
+  registerWorker,
   badRequest,
   cache: {
     get: function (key) {
