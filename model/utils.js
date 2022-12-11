@@ -109,7 +109,7 @@ module.exports = {
           const now = Date.now(); // in ms
           const parsed = JSON.parse(data);
           if (typeof parsed === "object") {
-            if (parsed.expired < 1 || parsed.expired - now >11 0) {
+            if (parsed.expired < 1 || parsed.expired - now > 0) {
               data = parsed.data;
             } else {
               fsCache.remove(key);
@@ -128,7 +128,7 @@ module.exports = {
         const now = Date.now(); // in ms
         const expireVal = parseInt(expire);
         const json = {
-          expired: expireVal > 0 ? now + expireVal : -1,
+          expired: expireVal > 0 ? now + expireVal : 0,
           data: val
         };
         fsCache.setSync(key, JSON.stringify(json));
