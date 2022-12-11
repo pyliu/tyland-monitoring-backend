@@ -20,7 +20,7 @@ parentPort.on("message", async (postBody) => {
     let data = utils.cache.get(url);
     if (!data) {
       data = await si.getStaticData();
-      // cache data for 8 hrs
+      // cache data forever
       utils.cache.set(url, data, -1);
     }
     const message = `🟢 找到 ${workerName} 資料`;
