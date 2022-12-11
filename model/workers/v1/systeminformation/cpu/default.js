@@ -16,9 +16,7 @@ parentPort.on("message", async (postBody) => {
   };
   try {
     config.isDev && console.log(__basename, "👌 繼續執行取得 CPU 資訊 ... ");
-    const cached = utils.cache.get(url);
-    let data = cached?.data;
-    console.log('data is ', data);
+    let data = utils.cache.get(url);
     if (!data) {
       data = await si.cpu();
       // cache data for 8 hrs

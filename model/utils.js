@@ -105,12 +105,11 @@ module.exports = {
       let data = undefined;
       try {
         data = fsCache.getSync(key, undefined);
-        if (data) {
+        if (typeof data === "string") {
           const now = Date.now(); // in ms
           const parsed = JSON.parse(data);
-          if (parsed) {
-            const expired = parseInt(parsed.expired);
-            if (expired === -1 || now - expired < 0) {
+          if (typeof parsed === "object") {
+            if (parsed.expired === -1 || now - parsed.expired < 0) {
               data = parsed.data;
             } else {
               fsCache.remove(key);
