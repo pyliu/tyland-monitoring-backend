@@ -4,7 +4,7 @@ const utils = require(path.join(__dirname, "..", "utils"));
 const StatusCodes = require("http-status-codes").StatusCodes;
 
 module.exports.register = (app) => {
-  app.post("/:case_id/:section_code/:opdate/:land_number/:serial/:distance", (req, res) => {
+  app.post("/upload/:case_id/:section_code/:opdate/:land_number/:serial/:distance", (req, res) => {
     if (utils.authenticate(req.headers.authorization)) {
       if (!req.files) {
         return res.status(StatusCodes.NOT_FOUND).send({ msg: "找不到上傳的檔案" });

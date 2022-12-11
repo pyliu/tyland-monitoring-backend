@@ -25,12 +25,12 @@ app.use(express.json({limit : parseInt(process.env.UPLOAD_LIMIT) })); // allow m
 /**
  * Auth API
  */
- const authAPI = require('./model/api/auth');
+ const authAPI = require(`./model/api/${config.apiVersion}/auth/auth`);
  authAPI.register(app);
  /**
   * SystemInformation CPU API
   */
-  const siCpuAPI = require(`./model/api/${config.apiVersion}/system/cpu`);
+  const siCpuAPI = require(`./model/api/${config.apiVersion}/systeminformation/cpu`);
   siCpuAPI.register(app);
 /**
  * Upload API

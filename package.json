@@ -29,8 +29,10 @@
     "https": "^1.0.0",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
+    "node-powershell": "^5.0.1",
     "sqlite3": "^5.1.2",
-    "systeminformation": "^5.16.5"
+    "systeminformation": "^5.16.5",
+    "zx": "^7.1.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.13"
