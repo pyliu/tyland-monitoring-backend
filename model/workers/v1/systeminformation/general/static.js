@@ -21,7 +21,7 @@ parentPort.on("message", async (postBody) => {
     if (!data) {
       data = await si.getStaticData();
       // cache data forever
-      utils.cache.set(url, data, -1);
+      utils.cache.set(url, data, 0);
     }
     const message = `🟢 找到 ${workerName} 資料`;
     config.isDev && console.log(__basename, message, data);
