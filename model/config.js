@@ -5,6 +5,7 @@ const config = {
   apiVersion: 'v1',
   keyPath: 'key',
   dbPath: 'db',
+  cachePath: 'cache',
   uploadPath: 'upload',
   connUri: `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
   dbUsername: process.env.DB_USERNAME,

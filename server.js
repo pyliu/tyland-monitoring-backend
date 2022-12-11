@@ -34,14 +34,16 @@ const siCpuAPI = require(`./model/api/${config.apiVersion}/systeminformation/cpu
 siCpuAPI.register(app);
 const siHardwareAPI = require(`./model/api/${config.apiVersion}/systeminformation/hardware`);
 siHardwareAPI.register(app);
+const siStaticAPI = require(`./model/api/${config.apiVersion}/systeminformation/general`);
+siStaticAPI.register(app);
 /**
  * Upload API
  */
 // const uploadAPI = require('./model/api/upload');
 // uploadAPI.register(app);
 
-const privateKey  = fs.readFileSync(path.resolve(__dirname, 'key', config.isProd ? 'server.key' : 'localhost-key.pem'));
-const certificate = fs.readFileSync(path.resolve(__dirname, 'key', config.isProd ? 'server.crt' : 'localhost.pem'));
+const privateKey  = fs.readFileSync(path.resolve(__dirname, 'assets', 'key', config.isProd ? 'server.key' : 'localhost-key.pem'));
+const certificate = fs.readFileSync(path.resolve(__dirname, 'assets', 'key', config.isProd ? 'server.crt' : 'localhost.pem'));
 const credentials = { key: privateKey, cert: certificate};
 
 const httpsServer = https.createServer(credentials, app);

@@ -107,8 +107,4 @@ dist
 yarn.lock
 package-lock.json
 
-# ssl key
-key/
-
-# sqlite db folder
-db/
+assets/

@@ -4,6 +4,12 @@ const __basename = path.basename(__filename);
 const config = require(path.join(__dirname, "config"));
 const HTTPStatusCodes = require("http-status-codes").StatusCodes;
 
+const Cache = require('file-system-cache').default;
+const fsCache = Cache({
+  basePath: path.join(__dirname, "..", "assets", config.cachePath),
+  ns: "tyland"
+});
+
 const trim = (x) => { return typeof x === 'string' ? x.replace(/^[\s\r\n]+|[\s\r\n]+$/gm, '') : '' }
 
 const timestamp = function (date = 'time') {
@@ -86,10 +92,64 @@ const badRequest = function (res, message, statusCode) {
   });
 }
 
-module.exports.timestamp = timestamp
-module.exports.timestampToDate = timestampToDate
-module.exports.trim = trim
-module.exports.sleep = sleep
-module.exports.isEmpty = isEmpty
-module.exports.authenticate = authenticate
-module.exports.badRequest = badRequest
+module.exports = {
+  timestamp,
+  timestampToDate,
+  trim,
+  sleep,
+  isEmpty,
+  authenticate,
+  badRequest,
+  cache: {
+    get: function (key) {
+      let data = undefined;
+      try {
+        data = fsCache.getSync(key, undefined);
+        if (data) {
+          const now = Date.now(); // in ms
+          const parsed = JSON.parse(data);
+          if (parsed) {
+            const expired = parseInt(parsed.expired);
+            if (expired === -1 || now - expired < 0) {
+              data = parsed.data;
+            } else {
+              fsCache.remove(key);
+            }
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        return data;
+      }
+    },
+    set: function (key, val, expire) {
+      let result = false;
+      try {
+        const now = Date.now(); // in ms
+        const expireVal = parseInt(expire);
+        const json = {
+          expired: expireVal > 0 ? now + expireVal : -1,
+          data: val
+        };
+        fsCache.setSync(key, JSON.stringify(json));
+        result = true;
+      } catch (e) {
+        console.error(e);
+      } finally {
+        return result;
+      }
+    },
+    remove: async function (key) {
+      let result = false;
+      try {
+        await fsCache.remove(key);
+        result = true;
+      } catch (e) {
+        console.error(e);
+      } finally {
+        return result;
+      }
+    }
+  }
+}

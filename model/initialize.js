@@ -1,14 +1,14 @@
 const fs = require("fs-extra");
 const path = require("path");
-const isEmpty = require("lodash/isEmpty");
 const config = require(path.join(__dirname, "config.js"));
 
 const __basename = path.basename(__filename);
 
 module.exports = async function () {
-  fs.ensureDirSync(path.join(__dirname, "..", config.uploadPath));
-  fs.ensureDirSync(path.join(__dirname, "..", config.dbPath));
-  fs.ensureDirSync(path.join(__dirname, "..", config.keyPath));
+  fs.ensureDirSync(path.join(__dirname, "..", "assets", config.uploadPath));
+  fs.ensureDirSync(path.join(__dirname, "..", "assets", config.dbPath));
+  fs.ensureDirSync(path.join(__dirname, "..", "assets", config.keyPath));
+  fs.ensureDirSync(path.join(__dirname, "..", "assets", config.cachePath));
   // const client = new MongoClient(config.connUri);
   try {
     // await client.connect();

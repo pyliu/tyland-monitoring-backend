@@ -24,6 +24,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
+    "file-system-cache": "^2.0.1",
     "fs-extra": "^10.0.0",
     "http-status-codes": "^2.1.4",
     "https": "^1.0.0",
