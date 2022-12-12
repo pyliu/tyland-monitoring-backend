@@ -17,12 +17,7 @@ parentPort.on("message", async (params) => {
   };
   try {
     config.isDev && console.log(__basename, `👌 繼續執行取得 ${workerName} 資訊 ... `);
-    let data = utils.cache.get(url);
-    if (!data) {
-      data = await si.fsStats();
-      // cache data for 30s
-      utils.cache.set(url, data, 30 * 1000);
-    }
+    const data = await si.fsStats();
     const message = `🟢 找到 ${workerName} 資料`;
     config.isDev && console.log(__basename, message, data);
     response.statusCode = config.statusCode.SUCCESS;
