@@ -115,10 +115,10 @@ module.exports = {
     get: function (key) {
       let data = undefined;
       try {
-        data = fsCache.getSync(key, undefined);
-        if (typeof data === "string") {
+        const cached = fsCache.getSync(key, undefined);
+        if (typeof cached === "string") {
           const now = Date.now(); // in ms
-          const parsed = JSON.parse(data);
+          const parsed = JSON.parse(cached);
           if (typeof parsed === "object") {
             if (parsed.expired < 1 || parsed.expired - now > 0) {
               data = parsed.data;
