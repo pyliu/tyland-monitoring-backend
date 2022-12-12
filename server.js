@@ -42,6 +42,10 @@ const siGraphicAPI = require(`./model/api/${config.apiVersion}/systeminformation
 siGraphicAPI.register(app);
 const siOSAPI = require(`./model/api/${config.apiVersion}/systeminformation/os`);
 siOSAPI.register(app);
+const siLoadingAPI = require(`./model/api/${config.apiVersion}/systeminformation/loading`);
+siLoadingAPI.register(app);
+const siProcessesAPI = require(`./model/api/${config.apiVersion}/systeminformation/processes`);
+siProcessesAPI.register(app);
 /**
  * Upload API
  */
