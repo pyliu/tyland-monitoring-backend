@@ -58,5 +58,7 @@
 - /api/v1/network/default/gateway
 - /api/v1/network/stats
 - /api/v1/network/connections
+- /api/v1/network/check/XXX.XXX.XXX.XXX
+- /api/v1/network/latency/XXX.XXX.XXX.XXX
 - /api/v1/network/check?target=XXX.XXX.XXX.XXX
 - /api/v1/network/latency?target=XXX.XXX.XXX.XXX

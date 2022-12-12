@@ -10,7 +10,7 @@ const workerName = 'NETWORK LATENCY';
 
 parentPort.on("message", async (params) => {
   config.isDev && console.log(`GET ${url} request`, params);
-  const target = utils.isEmpty(params.target) ? '8.8.8.8' : params.target;
+  const target = params.target || '8.8.8.8';
   let response = {
     statusCode: config.statusCode.FAIL,
     message: "未知的錯誤",

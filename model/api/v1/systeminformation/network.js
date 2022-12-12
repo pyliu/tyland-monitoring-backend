@@ -44,11 +44,31 @@ module.exports.register = (app) => {
       utils.badRequest(req, "❌ 認證失敗");
     }
   });
+  app.get(`/${config.apiPrefix}/v1/network/check/:ip`, (req, res) => {
+    if (utils.authenticate(req.headers.authorization)) {
+      const worker = new Worker(path.join(__dirname, '..', '..', '..', 'workers', 'v1', 'systeminformation', 'network', 'check.js'));
+      utils.registerWorker(res, worker, {
+        target: req.params.ip
+      });
+    } else {
+      utils.badRequest(req, "❌ 認證失敗");
+    }
+  });
   app.get(`/${config.apiPrefix}/v1/network/check`, (req, res) => {
     if (utils.authenticate(req.headers.authorization)) {
       const worker = new Worker(path.join(__dirname, '..', '..', '..', 'workers', 'v1', 'systeminformation', 'network', 'check.js'));
       utils.registerWorker(res, worker, {
         target: req.query.target
+      });
+    } else {
+      utils.badRequest(req, "❌ 認證失敗");
+    }
+  });
+  app.get(`/${config.apiPrefix}/v1/network/latency/:ip`, (req, res) => {
+    if (utils.authenticate(req.headers.authorization)) {
+      const worker = new Worker(path.join(__dirname, '..', '..', '..', 'workers', 'v1', 'systeminformation', 'network', 'latency.js'));
+      utils.registerWorker(res, worker, {
+        target: req.params.ip
       });
     } else {
       utils.badRequest(req, "❌ 認證失敗");
