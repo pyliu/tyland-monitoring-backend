@@ -34,8 +34,10 @@ const siCpuAPI = require(`./model/api/${config.apiVersion}/systeminformation/cpu
 siCpuAPI.register(app);
 const siHardwareAPI = require(`./model/api/${config.apiVersion}/systeminformation/hardware`);
 siHardwareAPI.register(app);
-const siStaticAPI = require(`./model/api/${config.apiVersion}/systeminformation/general`);
-siStaticAPI.register(app);
+const siGeneralAPI = require(`./model/api/${config.apiVersion}/systeminformation/general`);
+siGeneralAPI.register(app);
+const siMemoryAPI = require(`./model/api/${config.apiVersion}/systeminformation/memory`);
+siMemoryAPI.register(app);
 /**
  * Upload API
  */
