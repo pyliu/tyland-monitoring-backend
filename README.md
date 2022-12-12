@@ -1,6 +1,8 @@
 # tyland-monitoring-backend
-A monitoring backend service
+- A monitoring REST like API backend service.
+- Basically uses HTTP GET method to retrive data back.
 
+### GET
 ##### CPU
 - /api/v1/cpu
 - /api/v1/cpu/flags
