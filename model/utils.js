@@ -1,9 +1,8 @@
 const path = require("path");
 const isEmpty = require('lodash/isEmpty')
-const __basename = path.basename(__filename);
+// const __basename = path.basename(__filename);
 const config = require(path.join(__dirname, "config"));
 const HTTPStatusCodes = require("http-status-codes").StatusCodes;
-const { Worker } = require("worker_threads");
 
 const Cache = require('file-system-cache').default;
 const fsCache = Cache({
