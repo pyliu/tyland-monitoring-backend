@@ -48,6 +48,8 @@ const siProcessesAPI = require(`./model/api/${config.apiVersion}/systeminformati
 siProcessesAPI.register(app);
 const siFilesystemAPI = require(`./model/api/${config.apiVersion}/systeminformation/filesystem`);
 siFilesystemAPI.register(app);
+const siUSBAPI = require(`./model/api/${config.apiVersion}/systeminformation/usb`);
+siUSBAPI.register(app);
 /**
  * Upload API
  */
