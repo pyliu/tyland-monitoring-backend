@@ -40,6 +40,8 @@ const siMemoryAPI = require(`./model/api/${config.apiVersion}/systeminformation/
 siMemoryAPI.register(app);
 const siGraphicAPI = require(`./model/api/${config.apiVersion}/systeminformation/graphics`);
 siGraphicAPI.register(app);
+const siOSAPI = require(`./model/api/${config.apiVersion}/systeminformation/os`);
+siOSAPI.register(app);
 /**
  * Upload API
  */
