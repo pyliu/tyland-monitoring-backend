@@ -28,7 +28,7 @@ parentPort.on("message", async (postBody) => {
     response.statusCode = config.statusCode.SUCCESS;
     response.message = message;
     /**
-     * put retrived hardware data into payload
+     * put retrived hardware baseboard data into payload
      */
     response.payload = data;
     // }
