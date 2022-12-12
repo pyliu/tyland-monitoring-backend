@@ -52,6 +52,8 @@ const siUSBAPI = require(`./model/api/${config.apiVersion}/systeminformation/usb
 siUSBAPI.register(app);
 const siPrinterAPI = require(`./model/api/${config.apiVersion}/systeminformation/printer`);
 siPrinterAPI.register(app);
+const siNetworkAPI = require(`./model/api/${config.apiVersion}/systeminformation/network`);
+siNetworkAPI.register(app);
 /**
  * Upload API
  */
