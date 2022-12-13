@@ -1,0 +1,16 @@
+[
+  {
+    "_id": "d0d8de05-235b-471a-b141-265c82b825dc",
+    "colId": "history",
+    "containerId": "",
+    "name": "https://localhost:8082/api/v1/cpu",
+    "url": "https://localhost:8082/api/v1/cpu",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2022-12-12T01:09:43.001Z",
+    "modified": "2022-12-12T01:09:43.001Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  }
+]
