@@ -3,6 +3,7 @@ const config = {
   isProd: process.env.NODE_ENV === 'production',
   apiPrefix: 'api',
   apiVersion: 'v1',
+  rootPath: require('path').resolve('./'),
   keyPath: 'key',
   dbPath: 'db',
   cachePath: 'cache',

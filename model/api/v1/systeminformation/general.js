@@ -1,13 +1,13 @@
 const path = require("path");
 const config = require(path.join(__dirname, "..", "..", "..", "config"));
-const utils = require(path.join(__dirname, "..", "..", "..", "utils"));
+const utils = require(path.join(config.rootPath, "model", "utils"));
 const StatusCodes = require("http-status-codes").StatusCodes;
 const { Worker } = require("worker_threads");
 
 module.exports.register = (app) => {
   app.get(`/${config.apiPrefix}/v1/general/static`, (req, res) => {
     if (utils.authenticate(req.headers.authorization)) {
-      const worker = new Worker(path.join(__dirname, '..', '..', '..', 'workers', 'v1', 'systeminformation', 'general', 'static.js'));
+      const worker = new Worker(path.join(config.rootPath, 'model', 'workers', 'v1', 'systeminformation', 'general', 'static.js'));
       utils.registerWorker(res, worker);
     } else {
       utils.badRequest(req, "❌ 認證失敗");
@@ -15,7 +15,7 @@ module.exports.register = (app) => {
   });
   app.get(`/${config.apiPrefix}/v1/general/dynamic`, (req, res) => {
     if (utils.authenticate(req.headers.authorization)) {
-      const worker = new Worker(path.join(__dirname, '..', '..', '..', 'workers', 'v1', 'systeminformation', 'general', 'dynamic.js'));
+      const worker = new Worker(path.join(config.rootPath, 'model', 'workers', 'v1', 'systeminformation', 'general', 'dynamic.js'));
       utils.registerWorker(res, worker);
     } else {
       utils.badRequest(req, "❌ 認證失敗");
@@ -23,7 +23,7 @@ module.exports.register = (app) => {
   });
   app.get(`/${config.apiPrefix}/v1/general/time`, (req, res) => {
     if (utils.authenticate(req.headers.authorization)) {
-      const worker = new Worker(path.join(__dirname, '..', '..', '..', 'workers', 'v1', 'systeminformation', 'general', 'time.js'));
+      const worker = new Worker(path.join(config.rootPath, 'model', 'workers', 'v1', 'systeminformation', 'general', 'time.js'));
       utils.registerWorker(res, worker);
     } else {
       utils.badRequest(req, "❌ 認證失敗");
