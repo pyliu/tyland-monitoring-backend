@@ -598,5 +598,19 @@
     "headers": [],
     "params": [],
     "tests": []
+  },
+  {
+    "_id": "a6efa8eb-9cef-440f-a9df-da09f9a95690",
+    "colId": "121e4882-6a66-4fd4-a589-5ce01e3229d2",
+    "containerId": "dedc0c6a-1d5e-406f-84b6-94455183c2e9",
+    "name": "https://localhost:8082/api/v1/cpu",
+    "url": "http://localhost:8082/api/v1/cpu",
+    "method": "GET",
+    "sortNum": 10000,
+    "created": "2022-12-15T12:10:35.511Z",
+    "modified": "2022-12-15T12:12:03.387Z",
+    "headers": [],
+    "params": [],
+    "tests": []
   }
 ]
