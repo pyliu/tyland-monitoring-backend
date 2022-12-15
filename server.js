@@ -60,17 +60,17 @@ siNetworkAPI.register(app);
 // const uploadAPI = require('./model/api/upload');
 // uploadAPI.register(app);
 
-const privateKey  = fs.readFileSync(path.resolve(__dirname, 'assets', 'key', config.isProd ? 'server.key' : 'localhost-key.pem'));
-const certificate = fs.readFileSync(path.resolve(__dirname, 'assets', 'key', config.isProd ? 'server.crt' : 'localhost.pem'));
-const credentials = { key: privateKey, cert: certificate};
+// const privateKey  = fs.readFileSync(path.resolve(__dirname, 'assets', 'key', config.isProd ? 'server.key' : 'localhost-key.pem'));
+// const certificate = fs.readFileSync(path.resolve(__dirname, 'assets', 'key', config.isProd ? 'server.crt' : 'localhost.pem'));
+// const credentials = { key: privateKey, cert: certificate};
 
-const httpsServer = https.createServer(credentials, app);
+// const httpsServer = https.createServer(credentials, app);
 
-httpsServer.listen(process.env.SVR_PORT || 8082, () => {
-  console.log(`LAH MONITORING 伺服器已於 ${process.env.SVR_PORT || 8082} 埠號啟動。`);
-});
-
-// const SERVER_PORT = process.env.SVR_PORT || 8082;
-// app.listen(SERVER_PORT, () => {
-//   console.log(`伺服器已於 ${SERVER_PORT} 埠號啟動。`);
+// httpsServer.listen(process.env.SVR_PORT || 8082, () => {
+//   console.log(`LAH MONITORING 伺服器已於 ${process.env.SVR_PORT || 8082} 埠號啟動。`);
 // });
+
+const SERVER_PORT = process.env.SVR_PORT || 8082;
+app.listen(SERVER_PORT, () => {
+  console.log(`伺服器已於 ${SERVER_PORT} 埠號啟動。`);
+});
