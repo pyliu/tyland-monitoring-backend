@@ -14,6 +14,7 @@ const config = {
   l05MySQLUser: process.env.L05_MYSQL_USER,
   l05MySQLPw: process.env.L05_MYSQL_PW,
   l05MySQLDb: process.env.L05_MYSQL_DB,
+  l05BuildtsPath: process.env.L05_BUILDTS_PATH,
   statusCode: {
     SUCCESS: 1,
     FAIL: 0,
