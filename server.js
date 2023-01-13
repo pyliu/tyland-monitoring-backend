@@ -30,6 +30,11 @@ app.use(express.json({limit : parseInt(process.env.UPLOAD_LIMIT) })); // allow m
  /**
   * SystemInformation API
   */
+const l05API = require(`./model/api/${config.apiVersion}/l05/index`);
+l05API.register(app);
+ /**
+  * SystemInformation API
+  */
 const siCpuAPI = require(`./model/api/${config.apiVersion}/systeminformation/cpu`);
 siCpuAPI.register(app);
 const siHardwareAPI = require(`./model/api/${config.apiVersion}/systeminformation/hardware`);

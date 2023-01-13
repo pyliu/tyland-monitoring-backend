@@ -11,6 +11,9 @@ const config = {
   connUri: `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
   dbUsername: process.env.DB_USERNAME,
   dbPassword: process.env.DB_PASSWORD,
+  l05MySQLUser: process.env.L05_MYSQL_USER,
+  l05MySQLPw: process.env.L05_MYSQL_PW,
+  l05MySQLDb: process.env.L05_MYSQL_DB,
   statusCode: {
     SUCCESS: 1,
     FAIL: 0,
