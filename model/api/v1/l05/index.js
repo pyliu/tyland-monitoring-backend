@@ -6,7 +6,7 @@ const { Worker } = require("worker_threads");
 module.exports.register = (app) => {
   app.get(`/${config.apiPrefix}/v1/l05`, (req, res) => {
     if (utils.authenticate(req.headers.authorization)) {
-      const worker = new Worker(path.join(config.rootPath, 'model', 'workers', 'v1', 'l05', 'default.js'));
+      const worker = new Worker(path.join(config.rootPath, 'model', 'workers', 'v1', 'l05', 'index.js'));
       utils.registerWorker(res, worker, {
         limit: req.query?.limit
       });

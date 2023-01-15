@@ -14,7 +14,7 @@ parentPort.on("message", async (params) => {
     payload: undefined
   };
   try {
-    config.isDev && console.log(__basename, "👌 繼續執行取得 L05 同步異動同步異動資訊 ... ");
+    config.isDev && console.log(__basename, "👌 繼續執行取得 L05 同步異動紀錄資訊 ... ");
 
     
 
