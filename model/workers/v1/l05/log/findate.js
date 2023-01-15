@@ -1,5 +1,5 @@
 const path = require("path");
-const config = require(path.join(__dirname, "..", "..", "..", "config"));
+const config = require(path.join(__dirname, "..", "..", "..", "..", "config"));
 const utils = require(path.join(config.rootPath, "model", "utils"));
 const __basename = path.basename(__filename);
 const { parentPort } = require("worker_threads");

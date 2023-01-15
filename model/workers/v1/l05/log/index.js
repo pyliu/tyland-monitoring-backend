@@ -1,5 +1,5 @@
 const path = require("path");
-const config = require(path.join(__dirname, "..", "..", "..", "config"));
+const config = require(path.join(__dirname, "..", "..", "..", "..", "config"));
 const utils = require(path.join(config.rootPath, "model", "utils"));
 const __basename = path.basename(__filename);
 const { parentPort } = require("worker_threads");
@@ -15,9 +15,6 @@ parentPort.on("message", async (params) => {
   };
   try {
     config.isDev && console.log(__basename, "👌 繼續執行取得 L05 同步異動紀錄資訊 ... ");
-
-    
-
     const limit = parseInt(params.limit) || 100;
     const db = require(path.join(config.rootPath, "model", "l05MySQL"));
     const [result, fields] = await db.query(`SELECT * FROM qrysublog ORDER BY findate desc, qryid desc LIMIT ${limit}`) ;
