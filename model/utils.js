@@ -149,9 +149,11 @@ const registerWorker = function (res, worker, params = {}) {
   worker?.on("message", (data) => {
     res
       .status(
-        data.statusCode <= config.statusCode.FAIL
-          ? HTTPStatusCodes.NOT_ACCEPTABLE
-          : HTTPStatusCodes.OK
+        // data.statusCode <= config.statusCode.FAIL
+        //   ? HTTPStatusCodes.NOT_ACCEPTABLE
+        //   : HTTPStatusCodes.OK
+        // always response OK to let FE receives the data by axios 
+        HTTPStatusCodes.OK
       )
       .send({ ...data });
   });
