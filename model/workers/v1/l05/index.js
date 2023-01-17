@@ -27,18 +27,18 @@ parentPort.on("message", async (params) => {
     const [ { proc, pid, pids, cpu, mem } ] = await si.processLoad(config.l05ProcessName);
     payload.loading = { proc, pid, pids, cpu, mem };
     if (!parseInt(pid)) {
-      message = '同步程式尚未執行';
+      message = '⚠️ 同步程式尚未執行';
       response.statusCode = config.statusCode.FAIL_NOT_RUNNING;
     } else if (!pathExistsSync(config.l05BuildtsPath)) {
       // #2 check if the sync dir exists
-      message = '找不到同步異動檔案存放資料夾';
+      message = '⚠️ 找不到同步異動檔案存放資料夾';
       response.statusCode = config.statusCode.FAIL_NOT_EXISTS;
     } else {
       // #1, #2 are ok, #3 getting the latest 10(default) logs
       const limit = parseInt(params.limit) || 10;
       const db = require(path.join(config.rootPath, "model", "l05MySQL"));
       const [logs, dontcareFields] = await db.query(`SELECT * FROM qrysublog ORDER BY findate desc, qryid desc LIMIT ${limit}`) ;
-      message = '🟢 L05服務正常運作中';
+      message = '✅ L05服務正常運作中';
       /**
        * put retrived logs into payload
        */
@@ -53,7 +53,7 @@ parentPort.on("message", async (params) => {
     response.payload = e;
     if (e.code === 'ECONNREFUSED') {
       response.statusCode = config.statusCode.FAIL_NO_MYSQL;
-      response.message = '無法連線 MySQL 取得 qrysublog 紀錄資料';
+      response.message = '⚠️ 無法連線 MySQL 取得 qrysublog 紀錄資料';
     } else {
       console.error(__basename, "❌ 處理取得 L05 綜合分析資訊執行期間錯誤", e);
       response.message = "❌ 處理取得 L05 綜合分析資訊執行期間錯誤";
