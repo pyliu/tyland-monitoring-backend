@@ -23,6 +23,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json({limit : parseInt(process.env.UPLOAD_LIMIT) })); // allow maximum size json payload
 
 /**
+ * Server Info API
+ */
+ const svrAPI = require(`./model/api/${config.apiVersion}/svrinfo`);
+ svrAPI.register(app);
+/**
  * Auth API
  */
  const authAPI = require(`./model/api/${config.apiVersion}/auth/auth`);
