@@ -1,4 +1,6 @@
 const config = {
+  svrName: process.env.SVR_NAME,
+  svrDesc: process.env.SVR_DESC,
   isDev: process.env.NODE_ENV !== 'production',
   isProd: process.env.NODE_ENV === 'production',
   apiPrefix: 'api',
