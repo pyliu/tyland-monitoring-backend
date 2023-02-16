@@ -37,13 +37,20 @@ parentPort.on("message", async (params) => {
       // #1, #2 are ok, #3 getting the latest 10(default) logs
       const limit = parseInt(params.limit) || 10;
       const db = require(path.join(config.rootPath, "model", "l05MySQL"));
-      const [logs, dontcareFields] = await db.query(`SELECT * FROM qrysublog ORDER BY findate desc, qryid desc LIMIT ${limit}`) ;
+      const [logs, dontcareFields] = await db.query(`SELECT * FROM qrysublog ORDER BY findate desc, fintime desc LIMIT ${limit}`) ;
       message = '✅ L05服務正常運作中';
+      /**
+       * checking today's logs to see if the QryResult has "失敗"
+       */
+      const today = utils.timestamp('date').replaceAll('-', '')
+      const failed = logs.filter(log => {
+        return log.FinDate === today && log.QryResult?.includes('失敗')
+      })
       /**
        * put retrived logs into payload
        */
       payload.logs = logs;
-      response.statusCode = config.statusCode.SUCCESS;
+      response.statusCode = failed.length > 0 ? config.statusCode.FAIL_SYNC_ERROR : config.statusCode.SUCCESS;
     }
     response.payload = payload;
     response.message = message;
