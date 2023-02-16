@@ -27,7 +27,8 @@ const config = {
     FAIL_NOT_SUPPORT: -7,
     FAIL_NOT_EXISTS: -8,
     FAIL_NOT_RUNNING: -9,
-    FAIL_NO_MYSQL: -10
+    FAIL_NO_MYSQL: -10,
+    FAIL_SYNC_ERROR: -11
   }
 }
 
