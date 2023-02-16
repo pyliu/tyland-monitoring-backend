@@ -40,17 +40,21 @@ parentPort.on("message", async (params) => {
       const [logs, dontcareFields] = await db.query(`SELECT * FROM qrysublog ORDER BY findate desc, fintime desc LIMIT ${limit}`) ;
       message = '✅ L05服務正常運作中';
       /**
-       * checking today's logs to see if the QryResult has "失敗"
+       * checking today's latest log to see if the QryResult has "失敗"
        */
-      const today = utils.timestamp('date').replaceAll('-', '')
-      const failed = logs.filter(log => {
-        return log.FinDate === today && log.QryResult?.includes('失敗')
-      })
+      const today = utils.timestamp('date').replaceAll('-', '');
+      const failed = logs[0]?.FinDate === today && logs[0]?.QryResult?.includes('失敗');
       /**
        * put retrived logs into payload
        */
       payload.logs = logs;
-      response.statusCode = failed.length > 0 ? config.statusCode.FAIL_SYNC_ERROR : config.statusCode.SUCCESS;
+      if (failed) {
+        response.statusCode = config.statusCode.FAIL_SYNC_ERROR;
+        message = '❌ 最新紀錄顯示失敗';
+      } else {
+        response.statusCode = config.statusCode.SUCCESS;
+        message = '✅ L05服務正常運作中';
+      }
     }
     response.payload = payload;
     response.message = message;
