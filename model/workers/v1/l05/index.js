@@ -21,7 +21,8 @@ parentPort.on("message", async (params) => {
     const payload = {
       loading: undefined,
       path: config.l05.localSyncPath,
-      logs: undefined
+      logs: undefined,
+      ping: -1
     };
     // #1 check if the process is running
     const [ { proc, pid, pids, cpu, mem } ] = await si.processLoad(config.l05.processName);
@@ -62,6 +63,7 @@ parentPort.on("message", async (params) => {
         timeout: 1000
       });
       // remote.time => response time
+      payload.ping = remote.time
       if (!remote.success) {
         message = '🚩 局端伺服器無法連線';
         response.statusCode = config.statusCode.FAIL_NOT_REACHABLE;
