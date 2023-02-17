@@ -33,6 +33,7 @@
     "mysql2": "^3.0.1",
     "node-powershell": "^5.0.1",
     "ping": "^0.4.2",
+    "read-ini-file": "^4.0.0",
     "sqlite3": "^5.1.2",
     "systeminformation": "^5.16.5",
     "zx": "^7.1.1"

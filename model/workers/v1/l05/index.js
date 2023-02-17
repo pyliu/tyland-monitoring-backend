@@ -20,16 +20,16 @@ parentPort.on("message", async (params) => {
     config.isDev && console.log(__basename, message);
     const payload = {
       loading: undefined,
-      path: config.l05BuildtsPath,
+      path: config.l05.localSyncPath,
       logs: undefined
     };
     // #1 check if the process is running
-    const [ { proc, pid, pids, cpu, mem } ] = await si.processLoad(config.l05ProcessName);
+    const [ { proc, pid, pids, cpu, mem } ] = await si.processLoad(config.l05.processName);
     payload.loading = { proc, pid, pids, cpu, mem };
     if (!parseInt(pid)) {
       message = '⚠️ 同步程式尚未執行';
       response.statusCode = config.statusCode.FAIL_NOT_RUNNING;
-    } else if (!pathExistsSync(config.l05BuildtsPath)) {
+    } else if (!pathExistsSync(config.l05.localSyncPath)) {
       // #2 check if the sync dir exists
       message = '⚠️ 找不到同步異動檔案存放資料夾';
       response.statusCode = config.statusCode.FAIL_NOT_EXISTS;

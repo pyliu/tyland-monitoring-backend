@@ -1,3 +1,30 @@
+const path = require("path");
+const fse = require("fs-extra");
+const { readIniFileSync } = require('read-ini-file')
+/**
+ * load L05 configs
+ */
+const l05 = {
+  logMySQLDSN: '',
+  logMySQLUser: '',
+  logMySQLPw: '',
+  localSyncPath: '',
+  bureauSyncIP: '',
+  bureauSyncPort: '',
+  processName: process.env.L05_PROCESS_NAME || 'l05schedule1'
+};
+const L05_INI_DIR = process.env.L05_INT_PATH;
+if (fse.pathExistsSync(`${L05_INI_DIR}/L05UI.INI`) && fse.pathExistsSync(`${L05_INI_DIR}/SCHEDULE.INI`)) {
+  const l05ui = readIniFileSync(path.join(L05_INI_DIR, 'L05UI.INI'));
+  l05.logMySQLDSN = l05ui.DSN;
+  l05.logMySQLUser = l05ui.USER_NAME;
+  l05.logMySQLPw = l05ui.PASSWORD;
+  const l05schedule = readIniFileSync(path.join(L05_INI_DIR, 'SCHEDULE.INI'));
+  l05.localSyncPath = l05schedule.SOURCE_DIR?.replaceAll('\\:', ':');
+  l05.bureauSyncIP = l05schedule.IP;
+  l05.bureauSyncPort = l05schedule.PORT;
+  
+}
 const config = {
   svrName: process.env.SVR_NAME,
   svrDesc: process.env.SVR_DESC,
@@ -10,11 +37,7 @@ const config = {
   dbPath: 'db',
   cachePath: 'cache',
   uploadPath: 'upload',
-  l05MySQLUser: process.env.L05_MYSQL_USER,
-  l05MySQLPw: process.env.L05_MYSQL_PW,
-  l05MySQLDb: process.env.L05_MYSQL_DB,
-  l05BuildtsPath: process.env.L05_BUILDTS_PATH,
-  l05ProcessName: process.env.L05_PROCESS_NAME,
+  l05,
   statusCode: {
     SUCCESS: 1,
     FAIL: 0,
