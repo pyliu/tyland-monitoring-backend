@@ -55,6 +55,16 @@ parentPort.on("message", async (params) => {
         response.statusCode = config.statusCode.SUCCESS;
         message = '✅ L05服務正常運作中';
       }
+      // #4 detect if remote server is available
+      const remote = await utils.ping({
+        host: config.l05.bureauSyncIp,
+        port: config.l05.bureauSyncPort,
+        timeout: 1000
+      });
+      if (!remote.success) {
+        message = '🚩 局端伺服器無法連線';
+        response.statusCode = config.statusCode.FAIL_NOT_REACHABLE;
+      }
     }
     response.payload = payload;
     response.message = message;

@@ -36,6 +36,7 @@
     "read-ini-file": "^4.0.0",
     "sqlite3": "^5.1.2",
     "systeminformation": "^5.16.5",
+    "tcp-ping-node": "^1.0.0",
     "zx": "^7.1.1"
   },
   "devDependencies": {

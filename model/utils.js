@@ -2,6 +2,7 @@ const path = require("path");
 const isEmpty = require("lodash/isEmpty");
 // const __basename = path.basename(__filename);
 const config = require(path.join(__dirname, "config"));
+const { ping } = require('tcp-ping-node');
 const { spawn } = require("child_process");
 const HTTPStatusCodes = require("http-status-codes").StatusCodes;
 
@@ -222,4 +223,5 @@ module.exports = {
       }
     },
   },
+  ping
 };

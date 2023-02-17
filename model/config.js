@@ -9,7 +9,7 @@ const l05 = {
   logMySQLUser: '',
   logMySQLPw: '',
   localSyncPath: '',
-  bureauSyncIP: '',
+  bureauSyncIp: '',
   bureauSyncPort: '',
   processName: process.env.L05_PROCESS_NAME || 'l05schedule1'
 };
@@ -21,7 +21,7 @@ if (fse.pathExistsSync(`${L05_INI_DIR}/L05UI.INI`) && fse.pathExistsSync(`${L05_
   l05.logMySQLPw = l05ui.PASSWORD;
   const l05schedule = readIniFileSync(path.join(L05_INI_DIR, 'SCHEDULE.INI'));
   l05.localSyncPath = l05schedule.SOURCE_DIR?.replaceAll('\\:', ':');
-  l05.bureauSyncIP = l05schedule.IP;
+  l05.bureauSyncIp = l05schedule.IP;
   l05.bureauSyncPort = l05schedule.PORT;
   
 }
@@ -51,7 +51,8 @@ const config = {
     FAIL_NOT_EXISTS: -8,
     FAIL_NOT_RUNNING: -9,
     FAIL_NO_MYSQL: -10,
-    FAIL_SYNC_ERROR: -11
+    FAIL_SYNC_ERROR: -11,
+    FAIL_NOT_REACHABLE: -12
   }
 }
 
