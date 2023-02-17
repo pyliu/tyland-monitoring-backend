@@ -61,6 +61,7 @@ parentPort.on("message", async (params) => {
         port: config.l05.bureauSyncPort,
         timeout: 1000
       });
+      // remote.time => response time
       if (!remote.success) {
         message = '🚩 局端伺服器無法連線';
         response.statusCode = config.statusCode.FAIL_NOT_REACHABLE;
