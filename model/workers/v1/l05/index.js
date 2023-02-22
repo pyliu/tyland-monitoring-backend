@@ -19,8 +19,8 @@ parentPort.on("message", async (params) => {
     let message = "👌 繼續執行取得 L05 綜合分析資訊 ... ";
     config.isDev && console.log(__basename, message);
     const payload = {
+      ini: config.l05,
       loading: undefined,
-      path: config.l05.localSyncPath,
       logs: undefined,
       ping: -1
     };
