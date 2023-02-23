@@ -9,6 +9,7 @@ const l05 = {
   logMySQLUser: '',
   logMySQLPw: '',
   localSyncPath: '',
+  syncPeriod: '',
   bureauSyncIp: '',
   bureauSyncPort: '',
   processName: process.env.L05_PROCESS_NAME || 'l05schedule1'
@@ -23,6 +24,7 @@ if (fse.pathExistsSync(`${L05_INI_DIR}/L05UI.INI`) && fse.pathExistsSync(`${L05_
   l05.localSyncPath = l05schedule.SOURCE_DIR?.replaceAll('\\:', ':');
   l05.bureauSyncIp = l05schedule.IP;
   l05.bureauSyncPort = l05schedule.PORT;
+  l05.syncPeriod = l05schedule.PERIOD;
   
 }
 const config = {
