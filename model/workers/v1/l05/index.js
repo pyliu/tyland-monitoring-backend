@@ -76,7 +76,7 @@ parentPort.on("message", async (params) => {
   } catch (e) {
     response.payload = e;
     if (e.code === 'ECONNREFUSED') {
-      response.statusCode = config.statusCode.FAIL_NO_MYSQL;
+      response.statusCode = config.statusCode.FAIL_NO_DATABASE;
       response.message = '⚠️ 無法連線 MySQL 取得 qrysublog 紀錄資料';
     } else {
       console.error(__basename, "❌ 處理取得 L05 綜合分析資訊執行期間錯誤", e);

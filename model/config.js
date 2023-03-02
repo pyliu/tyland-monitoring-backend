@@ -1,6 +1,7 @@
 const path = require("path");
 const fse = require("fs-extra");
 const { readIniFileSync } = require('read-ini-file')
+
 /**
  * load L05 configs
  */
@@ -27,6 +28,23 @@ if (fse.pathExistsSync(`${L05_INI_DIR}/L05UI.INI`) && fse.pathExistsSync(`${L05_
   l05.syncPeriod = l05schedule.PERIOD;
   
 }
+
+/**
+ * load Bank configs
+ */
+const bank = {
+  mssqlUser: process.env.BANK_MSSQL_USER,
+  mssqlPw: process.env.BANK_MSSQL_PW,
+  localDBIP: '',
+  bureauDBIP: ''
+};
+const SVS_INI_DIR = process.env.BANK_INT_PATH;
+if (fse.pathExistsSync(`${SVS_INI_DIR}/DJSVS.ini`)) {
+  const djsvs = readIniFileSync(path.join(SVS_INI_DIR, 'DJSVS.ini'));
+  bank.localDBIP = djsvs.BranchDBServerIP;
+  bank.bureauDBIP = djsvs.CenterDBServerIP;
+}
+
 const config = {
   svrName: process.env.SVR_NAME,
   svrDesc: process.env.SVR_DESC,
@@ -39,7 +57,6 @@ const config = {
   dbPath: 'db',
   cachePath: 'cache',
   uploadPath: 'upload',
-  l05,
   statusCode: {
     SUCCESS: 1,
     FAIL: 0,
@@ -52,10 +69,12 @@ const config = {
     FAIL_NOT_SUPPORT: -7,
     FAIL_NOT_EXISTS: -8,
     FAIL_NOT_RUNNING: -9,
-    FAIL_NO_MYSQL: -10,
+    FAIL_NO_DATABASE: -10,
     FAIL_SYNC_ERROR: -11,
     FAIL_NOT_REACHABLE: -12
-  }
+  },
+  l05,
+  bank
 }
 
 module.exports = config;
