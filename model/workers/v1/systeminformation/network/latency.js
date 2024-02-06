@@ -1,6 +1,6 @@
 const path = require("path");
 const config = require(path.join(__dirname, "..", "..", "..", "..", "config"));
-const utils = require(path.join(__dirname, "..", "..", "..", "..", "utils"));
+const utils = require(path.join(config.rootPath, "model", "utils"));
 const __basename = path.basename(__filename);
 const { parentPort } = require("worker_threads");
 const si = require('systeminformation');
@@ -9,7 +9,7 @@ const url = `/${config.apiPrefix}/v1/network/latency`
 const workerName = 'NETWORK LATENCY';
 
 parentPort.on("message", async (params) => {
-  (config.isDev || config.isDebug) && console.log(`GET ${url} request`, params);
+  utils.log(`GET ${url} request`, params);
   const target = params.target || '8.8.8.8';
   let response = {
     statusCode: config.statusCode.FAIL,
@@ -17,10 +17,10 @@ parentPort.on("message", async (params) => {
     payload: undefined
   };
   try {
-    (config.isDev || config.isDebug) && console.log(__basename, `👌 繼續執行取得 ${workerName} ${target} 資訊 ... `);
+    utils.log(__basename, `👌 繼續執行取得 ${workerName} ${target} 資訊 ... `);
     const data = await si.inetLatency(target);
     const message = `🟢 找到 ${workerName} ${target} 資料`;
-    (config.isDev || config.isDebug) && console.log(__basename, message, data);
+    utils.log(__basename, message, data);
     response.statusCode = config.statusCode.SUCCESS;
     response.message = message;
     /**

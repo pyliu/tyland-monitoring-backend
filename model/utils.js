@@ -47,6 +47,12 @@ async function runExecutable(executable, args, opts = {}) {
   });
 }
 
+const log = function (...args) {
+  if ((config.isDev || config.isDebug) && console.log) {
+    console.log(...args);
+  }
+}
+
 const trim = (x) => {
   return typeof x === "string" ? x.replace(/^[\s\r\n]+|[\s\r\n]+$/gm, "") : "";
 };
@@ -106,7 +112,7 @@ const authenticate = async function (authHeader) {
   // const hash = authHeader.replace("Bearer ", "");
   try {
     // await client.connect();
-    // (config.isDev || config.isDebug) && console.log(__basename, "✔ DB已連線");
+    // log(__basename, "✔ DB已連線");
     // const userCollection = client.db().collection(config.userCollection);
     // const tokenFilter = { "token.hash": hash };
     // const user = await userCollection.findOne(tokenFilter);
@@ -116,18 +122,18 @@ const authenticate = async function (authHeader) {
     //   const authority = parseInt(user.authority) || 0;
     //   if ((authority & 2) === 2) {
     //     data.message = '⚠ 帳戶已停用';
-    //     (config.isDev || config.isDebug) && console.log(__basename, "🔴 ⚠ 帳戶已停用!", user.id, user.name);
+    //     log(__basename, "🔴 ⚠ 帳戶已停用!", user.id, user.name);
     //     return false;
     //   }
-    //   (config.isDev || config.isDebug) && console.log(__basename, "🔎 檢查 token 是否已過期", hash);
+    //   log(__basename, "🔎 檢查 token 是否已過期", hash);
     //   const expire = user.token.expire;
-    //   (config.isDev || config.isDebug) && console.log(__basename, "❗ token 預計過期時間", timestampToDate(expire));
+    //   log(__basename, "❗ token 預計過期時間", timestampToDate(expire));
     //   const now = +new Date();
     //   if (now > expire) {
-    //     (config.isDev || config.isDebug) && console.log(__basename, "🔴 token 已過期，需重新登入!", hash);
+    //     log(__basename, "🔴 token 已過期，需重新登入!", hash);
     //     return false
     //   }
-    //   (config.isDev || config.isDebug) && console.log(__basename, `🟢 ${user.id} token(${hash}) 正常`);
+    //   log(__basename, `🟢 ${user.id} token(${hash}) 正常`);
     //   return true;
     // }
   } catch (e) {
@@ -223,5 +229,6 @@ module.exports = {
       }
     },
   },
-  ping
+  ping,
+  log
 };

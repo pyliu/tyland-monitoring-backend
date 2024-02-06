@@ -9,7 +9,7 @@ const si = require('systeminformation');
 const url = `/${config.apiPrefix}/v1/l05`
 
 parentPort.on("message", async (params) => {
-  (config.isDev || config.isDebug) && console.log(`GET ${url} request`, params);
+  utils.log(`GET ${url} request`, params);
   let response = {
     statusCode: config.statusCode.FAIL,
     message: "❌ 未知的錯誤",
@@ -23,7 +23,7 @@ parentPort.on("message", async (params) => {
   };
   let message = "👌 繼續執行取得 L05 綜合分析資訊 ... ";
   try {
-    (config.isDev || config.isDebug) && console.log(__basename, message);
+    utils.log(__basename, message);
     // #0 detect if remote server is available
     const remote = await utils.ping({
       host: config.l05.bureauSyncIp,
@@ -73,7 +73,7 @@ parentPort.on("message", async (params) => {
           //   response.statusCode = config.statusCode.FAIL_NO_DATABASE;
           //   response.message = '⚠️ 無法連線 MySQL 取得 qrysublog 紀錄資料';
           // }
-          (config.isDev || config.isDebug) && console.log(__basename, e);
+          utils.log(__basename, e);
         }
       }
     }
@@ -86,7 +86,7 @@ parentPort.on("message", async (params) => {
   } finally {
     response.payload = payload;
     response.message = message;
-    (config.isDev || config.isDebug) && console.log(__basename, response);
+    utils.log(__basename, response);
     parentPort.postMessage(response);
   }
 });

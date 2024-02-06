@@ -1,6 +1,7 @@
 const fs = require("fs-extra");
 const path = require("path");
 const config = require(path.join(__dirname, "config.js"));
+const utils = require(path.join(config.rootPath, "model", "utils"));
 
 const __basename = path.basename(__filename);
 
@@ -12,7 +13,7 @@ module.exports = async function () {
   // const client = new MongoClient(config.connUri);
   try {
     // await client.connect();
-    // (config.isDev || config.isDebug) && console.log(__basename, "✔ MongoDB 可正常連線");
+    // utils.log(__basename, "✔ MongoDB 可正常連線");
     // const userCollection = client.db().collection(config.userCollection);
     // const idFilter = { id: 'HAADMIN' };
     // const admin = await userCollection.findOne(idFilter);

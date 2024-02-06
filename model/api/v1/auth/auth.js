@@ -1,6 +1,6 @@
 const path = require("path");
 const config = require(path.join(__dirname, "..", "..", "..", "config"));
-const utils = require(path.join(__dirname, "..", "..", "..", "utils"));
+const utils = require(path.join(config.rootPath, "model", "utils"));
 const StatusCodes = require("http-status-codes").StatusCodes;
 const { Worker } = require("worker_threads");
 const { isEmpty } = require("lodash");
@@ -9,7 +9,7 @@ module.exports.register = (app) => {
 
   app.post("/login", (req, res) => {
     const postBody = req.body
-    (config.isDev || config.isDebug) && console.log('👉 收到 Login 請求', postBody);
+    utils.log('👉 收到 Login 請求', postBody);
     if (isEmpty(postBody.apiKey) ) {
       console.warn('登入 apiKey 為空值。', postBody)
       utils.badRequest(req, "❌ 認證失敗");
