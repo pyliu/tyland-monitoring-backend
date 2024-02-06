@@ -8,14 +8,14 @@ const si = require('systeminformation');
 const url = `/${config.apiPrefix}/v1/cpu`
 
 parentPort.on("message", async (postBody) => {
-  config.isDev && console.log(`GET ${url} request`, postBody);
+  (config.isDev || config.isDebug) && console.log(`GET ${url} request`, postBody);
   let response = {
     statusCode: config.statusCode.FAIL,
     message: "未知的錯誤",
     payload: undefined
   };
   try {
-    config.isDev && console.log(__basename, "👌 繼續執行取得 CPU 資訊 ... ");
+    (config.isDev || config.isDebug) && console.log(__basename, "👌 繼續執行取得 CPU 資訊 ... ");
     let data = utils.cache.get(url);
     if (!data) {
       data = await si.cpu();
@@ -23,7 +23,7 @@ parentPort.on("message", async (postBody) => {
       utils.cache.set(url, data, 8 * 60 * 60 * 1000);
     }
     const message = `🟢 找到 CPU 資料`;
-    config.isDev && console.log(__basename, message, data);
+    (config.isDev || config.isDebug) && console.log(__basename, message, data);
     response.statusCode = config.statusCode.SUCCESS;
     response.message = message;
     /**

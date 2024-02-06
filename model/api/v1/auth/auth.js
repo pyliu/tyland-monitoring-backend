@@ -9,7 +9,7 @@ module.exports.register = (app) => {
 
   app.post("/login", (req, res) => {
     const postBody = req.body
-    config.isDev && console.log('👉 收到 Login 請求', postBody);
+    (config.isDev || config.isDebug) && console.log('👉 收到 Login 請求', postBody);
     if (isEmpty(postBody.apiKey) ) {
       console.warn('登入 apiKey 為空值。', postBody)
       utils.badRequest(req, "❌ 認證失敗");

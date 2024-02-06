@@ -100,13 +100,13 @@ const sleep = function (ms = 0) {
 const authenticate = async function (authHeader) {
   return true;
   if (isEmpty(authHeader) || !authHeader.startsWith("Bearer ")) {
-    config.isDev && console.warn("⚠ 找不到 Authorization 表頭", authHeader);
+    (config.isDev || config.isDebug) && console.warn("⚠ 找不到 Authorization 表頭", authHeader);
     return false;
   }
   // const hash = authHeader.replace("Bearer ", "");
   try {
     // await client.connect();
-    // config.isDev && console.log(__basename, "✔ DB已連線");
+    // (config.isDev || config.isDebug) && console.log(__basename, "✔ DB已連線");
     // const userCollection = client.db().collection(config.userCollection);
     // const tokenFilter = { "token.hash": hash };
     // const user = await userCollection.findOne(tokenFilter);
@@ -116,18 +116,18 @@ const authenticate = async function (authHeader) {
     //   const authority = parseInt(user.authority) || 0;
     //   if ((authority & 2) === 2) {
     //     data.message = '⚠ 帳戶已停用';
-    //     config.isDev && console.log(__basename, "🔴 ⚠ 帳戶已停用!", user.id, user.name);
+    //     (config.isDev || config.isDebug) && console.log(__basename, "🔴 ⚠ 帳戶已停用!", user.id, user.name);
     //     return false;
     //   }
-    //   config.isDev && console.log(__basename, "🔎 檢查 token 是否已過期", hash);
+    //   (config.isDev || config.isDebug) && console.log(__basename, "🔎 檢查 token 是否已過期", hash);
     //   const expire = user.token.expire;
-    //   config.isDev && console.log(__basename, "❗ token 預計過期時間", timestampToDate(expire));
+    //   (config.isDev || config.isDebug) && console.log(__basename, "❗ token 預計過期時間", timestampToDate(expire));
     //   const now = +new Date();
     //   if (now > expire) {
-    //     config.isDev && console.log(__basename, "🔴 token 已過期，需重新登入!", hash);
+    //     (config.isDev || config.isDebug) && console.log(__basename, "🔴 token 已過期，需重新登入!", hash);
     //     return false
     //   }
-    //   config.isDev && console.log(__basename, `🟢 ${user.id} token(${hash}) 正常`);
+    //   (config.isDev || config.isDebug) && console.log(__basename, `🟢 ${user.id} token(${hash}) 正常`);
     //   return true;
     // }
   } catch (e) {

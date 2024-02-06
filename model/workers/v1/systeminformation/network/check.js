@@ -9,14 +9,14 @@ const url = `/${config.apiPrefix}/v1/network/check`
 const workerName = 'NETWORK CHECK';
 
 parentPort.on("message", async (params) => {
-  config.isDev && console.log(`GET ${url} request`, params);
+  (config.isDev || config.isDebug) && console.log(`GET ${url} request`, params);
   let response = {
     statusCode: config.statusCode.FAIL,
     message: "未知的錯誤",
     payload: undefined
   };
   try {
-    config.isDev && console.log(__basename, `👌 繼續執行取得 ${workerName} ${params.target} 資訊 ... `);
+    (config.isDev || config.isDebug) && console.log(__basename, `👌 繼續執行取得 ${workerName} ${params.target} 資訊 ... `);
     const target = params.target || '8.8.8.8';
     let data = await si.inetChecksite(target);
     if (utils.isEmpty(data.ms)) {
@@ -32,7 +32,7 @@ parentPort.on("message", async (params) => {
       }
     }
     const message = `🟢 找到 ${workerName} 資料`;
-    config.isDev && console.log(__basename, message, data);
+    (config.isDev || config.isDebug) && console.log(__basename, message, data);
     response.statusCode = config.statusCode.SUCCESS;
     response.message = message;
     /**

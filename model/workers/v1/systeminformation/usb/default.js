@@ -9,17 +9,17 @@ const url = `/${config.apiPrefix}/v1/usb`
 const workerName = 'USB';
 
 parentPort.on("message", async (params) => {
-  config.isDev && console.log(`GET ${url} request`, params);
+  (config.isDev || config.isDebug) && console.log(`GET ${url} request`, params);
   let response = {
     statusCode: config.statusCode.FAIL,
     message: "未知的錯誤",
     payload: undefined
   };
   try {
-    config.isDev && console.log(__basename, `👌 繼續執行取得 ${workerName} 資訊 ... `);
+    (config.isDev || config.isDebug) && console.log(__basename, `👌 繼續執行取得 ${workerName} 資訊 ... `);
     const data = await si.usb();
     const message = `🟢 找到 ${workerName} 資料`;
-    config.isDev && console.log(__basename, message, data);
+    (config.isDev || config.isDebug) && console.log(__basename, message, data);
     response.statusCode = config.statusCode.SUCCESS;
     response.message = message;
     /**

@@ -12,18 +12,18 @@ parentPort.on("message", async (authorizationHeader) => {
   let userDoc = {}
   try {
     await client.connect();
-    config.isDev && console.log(__basename, '✔ DB已連線');
+    (config.isDev || config.isDebug) && console.log(__basename, '✔ DB已連線');
     const userCollection = client.db().collection(config.userCollection);
     const tokenFilter = { 'token.hash': hash };
     const user = await userCollection.findOne(tokenFilter);
     if (isEmpty(user)) {
-      config.isDev && console.log(__basename, '❌ 找不到使用者資料', tokenFilter);
+      (config.isDev || config.isDebug) && console.log(__basename, '❌ 找不到使用者資料', tokenFilter);
     } else {
       const authority = parseInt(user.authority) || 0;
       if ((authority & 2) === 2) {
-        config.isDev && console.log(__basename, "⚠ 帳戶已停用!", user.id, user.name);
+        (config.isDev || config.isDebug) && console.log(__basename, "⚠ 帳戶已停用!", user.id, user.name);
       } else {
-        config.isDev && console.log(__basename, '✔ 找到使用者資料', tokenFilter);
+        (config.isDev || config.isDebug) && console.log(__basename, '✔ 找到使用者資料', tokenFilter);
         userDoc = { ...user };
       }
     }
