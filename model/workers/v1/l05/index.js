@@ -37,13 +37,15 @@ parentPort.on("message", async (params) => {
       message = '🚩 局端伺服器無法連線';
       response.statusCode = config.statusCode.FAIL_NOT_REACHABLE;
     } else {
-      // #1 check if the process is running
+      // #1 collect process loading data
       const [ { proc, pid, pids, cpu, mem } ] = await si.processLoad(config.l05.processName);
       payload.loading = { proc, pid, pids, cpu, mem };
-      if (!parseInt(pid)) {
-        message = '⚠️ 同步程式尚未執行';
-        response.statusCode = config.statusCode.FAIL_NOT_RUNNING;
-      } else if (!pathExistsSync(config.l05.localSyncPath)) {
+      // skip ...
+      // if (!parseInt(pid)) {
+      //   message = '⚠️ 同步程式尚未執行';
+      //   response.statusCode = config.statusCode.FAIL_NOT_RUNNING;
+      // } else 
+      if (!pathExistsSync(config.l05.localSyncPath)) {
         // #2 check if the sync dir exists
         message = '⚠️ 找不到同步異動檔案存放資料夾';
         response.statusCode = config.statusCode.FAIL_NOT_EXISTS;
