@@ -3,7 +3,7 @@ const config = require(path.join(__dirname, "..", "..", "..", "config"));
 const utils = require(path.join(config.rootPath, "model", "utils"));
 const __basename = path.basename(__filename);
 const { parentPort } = require("worker_threads");
-const { pathExistsSync, readdirSync } = require("fs-extra");
+const { pathExistsSync, readdirSync, statSync } = require("fs-extra");
 const si = require('systeminformation');
 
 const url = `/${config.apiPrefix}/v1/l05`
@@ -54,8 +54,14 @@ parentPort.on("message", async (params) => {
         message = '✅ L05服務正常運作中';
         // #3 check pending files in sync folder
         const files = readdirSync(config.l05.localSyncPath);
-        if (files) {
-          payload.files = [...files];
+        if (Array.isArray(files)) {
+          files.forEach(file => {
+            const stats = statSync(path.join(config.l05.localSyncPath, file));
+            stats.path = config.l05.localSyncPath;
+            stats.name = file;
+            payload.files.push(stats);
+          })
+          // payload.files = [...files];
         }
         // getting MySQL logs
         try {
