@@ -3,7 +3,7 @@ const config = require(path.join(__dirname, "..", "..", "..", "config"));
 const utils = require(path.join(config.rootPath, "model", "utils"));
 const __basename = path.basename(__filename);
 const { parentPort } = require("worker_threads");
-const { pathExistsSync } = require("fs-extra");
+const { pathExistsSync, readdirSync } = require("fs-extra");
 const si = require('systeminformation');
 
 const url = `/${config.apiPrefix}/v1/l05`
@@ -19,7 +19,8 @@ parentPort.on("message", async (params) => {
     ini: config.l05,
     loading: undefined,
     logs: undefined,
-    ping: -1
+    ping: -1,
+    files: []
   };
   let message = "👌 繼續執行取得 L05 綜合分析資訊 ... ";
   try {
@@ -49,8 +50,14 @@ parentPort.on("message", async (params) => {
       } else {
         response.statusCode = config.statusCode.SUCCESS;
         message = '✅ L05服務正常運作中';
+        // #3 check pending files in sync folder
+        const files = readdirSync(config.l05.localSyncPath);
+        if (files) {
+          payload.files = [...files];
+        }
+        // getting MySQL logs
         try {
-          // #1, #2 are ok, #3 getting the latest 10(default) logs
+          // #1, #2, #3 are ok, #4 getting the latest 10(default) logs
           const limit = parseInt(params.limit) || 10;
           const db = require(path.join(config.rootPath, "model", "l05MySQL"));
           const [logs, dontcareFields] = await db.query(`SELECT * FROM qrysublog ORDER BY findate desc, fintime desc LIMIT ${limit}`) ;
