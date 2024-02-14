@@ -2,7 +2,7 @@ module.exports = {
   apps: [{
     name: 'tyland-monitoring-backend',
     exec_mode: 'cluster',
-    instances: -1,
+    instances: 2,
     script: './server.js',
     out_file: './logs/backend_out.log',
     error_file: './logs/backend_err.log',
