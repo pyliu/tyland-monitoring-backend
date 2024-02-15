@@ -56,12 +56,12 @@ parentPort.on("message", async (params) => {
       // #1 collect process loading data
       const [ { proc, pid, pids, cpu, mem } ] = await si.processLoad(config.l05.processName);
       payload.loading = { proc, pid, pids, cpu, mem };
-      payload.isRunning = await isRunning(config.l05.processName);
+      // payload.isRunning = await isRunning(config.l05.processName);
       // skip ...
-      // if (!parseInt(pid)) {
+      // if (!isRunning) {
       //   message = '⚠️ 同步程式尚未執行';
       //   response.statusCode = config.statusCode.FAIL_NOT_RUNNING;
-      // } else 
+      // } else
       if (!pathExistsSync(config.l05.localSyncPath)) {
         // #2 check if the sync dir exists
         message = '⚠️ 找不到同步異動檔案存放資料夾';
