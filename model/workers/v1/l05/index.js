@@ -5,8 +5,23 @@ const __basename = path.basename(__filename);
 const { parentPort } = require("worker_threads");
 const { pathExistsSync, readdirSync, statSync } = require("fs-extra");
 const si = require('systeminformation');
+const exec = require('child_process').exec
 
 const url = `/${config.apiPrefix}/v1/l05`
+
+function isRunning(win, mac = 'dontcare', linux = 'dontcare'){
+    return new Promise(function(resolve, reject) {
+        const plat = process.platform
+        const cmd = plat == 'win32' ? 'tasklist' : (plat == 'darwin' ? 'ps -ax | grep ' + mac : (plat == 'linux' ? 'ps -A' : ''))
+        const proc = plat == 'win32' ? win : (plat == 'darwin' ? mac : (plat == 'linux' ? linux : ''))
+        if(cmd === '' || proc === '') {
+            resolve(false)
+        }
+        exec(cmd, function(err, stdout, stderr) {
+            resolve(stdout.toLowerCase().indexOf(proc.toLowerCase()) > -1)
+        })
+    })
+}
 
 parentPort.on("message", async (params) => {
   utils.log(`GET ${url} request`, params);
@@ -20,7 +35,8 @@ parentPort.on("message", async (params) => {
     loading: undefined,
     logs: undefined,
     ping: -1,
-    files: []
+    files: [],
+    isRunning: false
   };
   let message = "👌 繼續執行取得 L05 綜合分析資訊 ... ";
   try {
@@ -40,6 +56,7 @@ parentPort.on("message", async (params) => {
       // #1 collect process loading data
       const [ { proc, pid, pids, cpu, mem } ] = await si.processLoad(config.l05.processName);
       payload.loading = { proc, pid, pids, cpu, mem };
+      payload.isRunning = await isRunning(config.l05.processName);
       // skip ...
       // if (!parseInt(pid)) {
       //   message = '⚠️ 同步程式尚未執行';
