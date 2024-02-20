@@ -37,7 +37,8 @@ parentPort.on("message", async (params) => {
     logs: undefined,
     ping: -1,
     files: [],
-    isRunning: false
+    isJarRunning: false,
+    jar: 'L05Schedule'
   };
   let message = "👌 繼續執行取得 L05 綜合分析資訊 ... ";
   try {
@@ -58,7 +59,7 @@ parentPort.on("message", async (params) => {
       const [ { proc, pid, pids, cpu, mem } ] = await si.processLoad(config.l05.processName);
       payload.loading = { proc, pid, pids, cpu, mem };
       // To check if L05Schedule.jar running ... 
-      payload.isRunning = await isRunning('L05Schedule');
+      payload.isJarRunning = await isRunning(payload.jar);
       // skip ...
       // if (!isRunning) {
       //   message = '⚠️ 同步程式尚未執行';
