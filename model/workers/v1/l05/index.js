@@ -18,6 +18,7 @@ function isRunning(win, mac = 'dontcare', linux = 'dontcare'){
             resolve(false)
         }
         exec(cmd, function(err, stdout, stderr) {
+            utils.log(`isRunning`, stdout);
             resolve(stdout.toLowerCase().indexOf(proc.toLowerCase()) > -1)
         })
     })
@@ -56,7 +57,8 @@ parentPort.on("message", async (params) => {
       // #1 collect process loading data
       const [ { proc, pid, pids, cpu, mem } ] = await si.processLoad(config.l05.processName);
       payload.loading = { proc, pid, pids, cpu, mem };
-      // payload.isRunning = await isRunning(config.l05.processName);
+      // To check if L05Schedule.jar running ... 
+      payload.isRunning = await isRunning('L05Schedule');
       // skip ...
       // if (!isRunning) {
       //   message = '⚠️ 同步程式尚未執行';
