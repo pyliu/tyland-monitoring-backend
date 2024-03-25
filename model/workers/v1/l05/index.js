@@ -9,20 +9,20 @@ const exec = require('child_process').exec
 
 const url = `/${config.apiPrefix}/v1/l05`
 
-function isRunning(win, mac = 'dontcare', linux = 'dontcare'){
-    return new Promise(function(resolve, reject) {
-        const plat = process.platform
-        const cmd = plat == 'win32' ? 'tasklist' : (plat == 'darwin' ? 'ps -ax | grep ' + mac : (plat == 'linux' ? 'ps -A' : ''))
-        const proc = plat == 'win32' ? win : (plat == 'darwin' ? mac : (plat == 'linux' ? linux : ''))
-        if(cmd === '' || proc === '') {
-            resolve(false)
-        }
-        exec(cmd, function(err, stdout, stderr) {
-            utils.log(`isRunning`, stdout);
-            resolve(stdout.toLowerCase().indexOf(proc.toLowerCase()) > -1)
-        })
-    })
-}
+// function isRunning(win, mac = 'dontcare', linux = 'dontcare'){
+//     return new Promise(function(resolve, reject) {
+//         const plat = process.platform
+//         const cmd = plat == 'win32' ? 'tasklist' : (plat == 'darwin' ? 'ps -ax | grep ' + mac : (plat == 'linux' ? 'ps -A' : ''))
+//         const proc = plat == 'win32' ? win : (plat == 'darwin' ? mac : (plat == 'linux' ? linux : ''))
+//         if(cmd === '' || proc === '') {
+//             resolve(false)
+//         }
+//         exec(cmd, function(err, stdout, stderr) {
+//             utils.log(`isRunning`, stdout);
+//             resolve(stdout.toLowerCase().indexOf(proc.toLowerCase()) > -1)
+//         })
+//     })
+// }
 
 parentPort.on("message", async (params) => {
   utils.log(`GET ${url} request`, params);
@@ -37,7 +37,6 @@ parentPort.on("message", async (params) => {
     logs: undefined,
     ping: -1,
     files: [],
-    isJarRunning: false,
     jar: 'L05Schedule'
   };
   let message = "👌 繼續執行取得 L05 綜合分析資訊 ... ";
@@ -58,8 +57,6 @@ parentPort.on("message", async (params) => {
       // #1 collect process loading data
       const [ { proc, pid, pids, cpu, mem } ] = await si.processLoad(config.l05.processName);
       payload.loading = { proc, pid, pids, cpu, mem };
-      // To check if L05Schedule.jar running ... 
-      payload.isJarRunning = await isRunning(payload.jar);
       // skip ...
       // if (!isRunning) {
       //   message = '⚠️ 同步程式尚未執行';
@@ -77,9 +74,12 @@ parentPort.on("message", async (params) => {
         if (Array.isArray(files)) {
           files.forEach(file => {
             const stats = statSync(path.join(config.l05.localSyncPath, file));
-            stats.path = config.l05.localSyncPath;
-            stats.name = file;
-            payload.files.push(stats);
+            // only cares about file
+            if (stats.isFile()) {
+              stats.path = config.l05.localSyncPath;
+              stats.name = file;
+              payload.files.push(stats);
+            }
           })
           if (!payload.loading.pid) {
             message = `(未偵測到同步程式 ${config.l05.processName}.exe)`;
