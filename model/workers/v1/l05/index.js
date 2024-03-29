@@ -5,24 +5,9 @@ const __basename = path.basename(__filename);
 const { parentPort } = require("worker_threads");
 const { pathExistsSync, readdirSync, statSync } = require("fs-extra");
 const si = require('systeminformation');
-const exec = require('child_process').exec
+const readLastLines = require('read-last-lines');
 
 const url = `/${config.apiPrefix}/v1/l05`
-
-// function isRunning(win, mac = 'dontcare', linux = 'dontcare'){
-//     return new Promise(function(resolve, reject) {
-//         const plat = process.platform
-//         const cmd = plat == 'win32' ? 'tasklist' : (plat == 'darwin' ? 'ps -ax | grep ' + mac : (plat == 'linux' ? 'ps -A' : ''))
-//         const proc = plat == 'win32' ? win : (plat == 'darwin' ? mac : (plat == 'linux' ? linux : ''))
-//         if(cmd === '' || proc === '') {
-//             resolve(false)
-//         }
-//         exec(cmd, function(err, stdout, stderr) {
-//             utils.log(`isRunning`, stdout);
-//             resolve(stdout.toLowerCase().indexOf(proc.toLowerCase()) > -1)
-//         })
-//     })
-// }
 
 parentPort.on("message", async (params) => {
   utils.log(`GET ${url} request`, params);
@@ -35,13 +20,30 @@ parentPort.on("message", async (params) => {
     ini: config.l05,
     loading: undefined,
     logs: undefined,
+    runtimeLogs: {
+      stdout: [],
+      stderr: [],
+      sqlnet: []
+    },
     ping: -1,
-    files: [],
-    jar: 'L05Schedule'
+    files: []
   };
   let message = "👌 繼續執行取得 L05 綜合分析資訊 ... ";
   try {
     utils.log(__basename, message);
+    // #-1 fetching EXE logs (runtime log, last 100 lines)
+    let tmp = await readLastLines.read(config.l05.logs.stdout, config.l05.logs.lines);
+    if (tmp.length > 0) {
+      payload.runtimeLogs.stdout = [...tmp.split("\r\n")];
+    }
+    tmp = await readLastLines.read(config.l05.logs.stderr, config.l05.logs.lines);
+    if (tmp.length > 0) {
+      payload.runtimeLogs.stderr = [...tmp.split("\r\n")];
+    }
+    tmp = await readLastLines.read(config.l05.logs.sqlnet, config.l05.logs.lines);
+    if (tmp.length > 0) {
+      payload.runtimeLogs.sqlnet = [...tmp.split("\r\n")];
+    }
     // #0 detect if remote server is available
     const remote = await utils.ping({
       host: config.l05.bureauSyncIp,
@@ -57,11 +59,6 @@ parentPort.on("message", async (params) => {
       // #1 collect process loading data
       const [ { proc, pid, pids, cpu, mem } ] = await si.processLoad(config.l05.processName);
       payload.loading = { proc, pid, pids, cpu, mem };
-      // skip ...
-      // if (!isRunning) {
-      //   message = '⚠️ 同步程式尚未執行';
-      //   response.statusCode = config.statusCode.FAIL_NOT_RUNNING;
-      // } else
       if (!pathExistsSync(config.l05.localSyncPath)) {
         // #2 check if the sync dir exists
         message = '⚠️ 找不到同步異動檔案存放資料夾';

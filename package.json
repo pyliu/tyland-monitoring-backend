@@ -34,6 +34,7 @@
     "node-powershell": "^5.0.1",
     "ping": "^0.4.2",
     "read-ini-file": "^4.0.0",
+    "read-last-lines": "^1.8.0",
     "sqlite3": "^5.1.2",
     "systeminformation": "^5.16.5",
     "tcp-ping-node": "^1.0.0",
