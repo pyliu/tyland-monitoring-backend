@@ -15,14 +15,14 @@ const l05 = {
   bureauSyncPort: '',
   processName: process.env.L05_PROCESS_NAME || 'l05schedule1',
   logs: {
-    base: process.env.L05_EXE_PATH,
+    base: process.env.L05_EXE_PATH || "C:/Quantasoft/L05/EXE",
     lines: process.env.L05_LOG_LINES || 100,
     stdout: `${process.env.L05_EXE_PATH}/stdout.log`,
     stderr: `${process.env.L05_EXE_PATH}/stderr.log`,
     sqlnet: `${process.env.L05_EXE_PATH}/sqlnet.log`
   }
 };
-const L05_INI_DIR = process.env.L05_INI_PATH;
+const L05_INI_DIR = process.env.L05_INI_PATH || "C:/Quantasoft/L05/INI";
 if (fse.pathExistsSync(`${L05_INI_DIR}/L05UI.INI`) && fse.pathExistsSync(`${L05_INI_DIR}/SCHEDULE.INI`)) {
   const l05ui = readIniFileSync(path.join(L05_INI_DIR, 'L05UI.INI'));
   l05.logMySQLDSN = l05ui.DSN;
