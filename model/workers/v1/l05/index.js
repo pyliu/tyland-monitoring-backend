@@ -29,17 +29,28 @@ parentPort.on("message", async (params) => {
     files: []
   };
   let message = "👌 繼續執行取得 L05 綜合分析資訊 ... ";
+  utils.log(__basename, message);
   try {
-    utils.log(__basename, message);
     // #-1 fetching EXE logs (runtime log, last 100 lines)
+    message = "👉 取得 L05 執行期間紀錄檔 stdout.log ... ";
+    utils.log(__basename, message);
     let tmp = await readLastLines.read(config.l05.logs.stdout, config.l05.logs.lines);
     if (tmp.length > 0) {
+      // big5 => utf-8
+      // const encoder = new TextEncoder();
+      // const buffer = ArrayBuffer(tmp);
+      // const decoder = new TextDecoder('big5');
+      // tmp = decoder.decode(buffer);
       payload.runtimeLogs.stdout = [...tmp.split("\r\n")];
     }
+    message = "👉 取得 L05 執行期間紀錄檔 stderr.log ... ";
+    utils.log(__basename, message);
     tmp = await readLastLines.read(config.l05.logs.stderr, config.l05.logs.lines);
     if (tmp.length > 0) {
       payload.runtimeLogs.stderr = [...tmp.split("\r\n")];
     }
+    message = "👉 取得 L05 SQL連線紀錄檔 sqlnet.log ... ";
+    utils.log(__basename, message);
     tmp = await readLastLines.read(config.l05.logs.sqlnet, config.l05.logs.lines);
     if (tmp.length > 0) {
       payload.runtimeLogs.sqlnet = [...tmp.split("\r\n")];
