@@ -38,9 +38,9 @@ parentPort.on("message", async (params) => {
     if (tmp.length > 0) {
       // big5 => utf-8
       // const encoder = new TextEncoder();
-      // const buffer = ArrayBuffer(tmp);
+      // const buffer = new ArrayBuffer(tmp);
       // const decoder = new TextDecoder('big5');
-      // tmp = decoder.decode(buffer);
+      // tmp = decoder.decode(tmp);
       payload.runtimeLogs.stdout = [...tmp.split("\r\n")];
     }
     message = "👉 取得 L05 執行期間紀錄檔 stderr.log ... ";
