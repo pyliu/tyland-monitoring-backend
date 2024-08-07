@@ -5,7 +5,7 @@ const __basename = path.basename(__filename);
 const { parentPort } = require("worker_threads");
 const { pathExistsSync, readdirSync, statSync } = require("fs-extra");
 const si = require('systeminformation');
-const readLastLines = require('read-last-lines');
+// const readLastLines = require('read-last-lines');
 
 const url = `/${config.apiPrefix}/v1/l05`
 
@@ -32,29 +32,24 @@ parentPort.on("message", async (params) => {
   utils.log(__basename, message);
   try {
     // #-1 fetching EXE logs (runtime log, last 100 lines)
-    message = "👉 取得 L05 執行期間紀錄檔 stdout.log ... ";
-    utils.log(__basename, message);
-    let tmp = await readLastLines.read(config.l05.logs.stdout, config.l05.logs.lines);
-    if (tmp.length > 0) {
-      // big5 => utf-8
-      // const encoder = new TextEncoder();
-      // const buffer = new ArrayBuffer(tmp);
-      // const decoder = new TextDecoder('big5');
-      // tmp = decoder.decode(tmp);
-      payload.runtimeLogs.stdout = [...tmp.split("\r\n")];
-    }
-    message = "👉 取得 L05 執行期間紀錄檔 stderr.log ... ";
-    utils.log(__basename, message);
-    tmp = await readLastLines.read(config.l05.logs.stderr, config.l05.logs.lines);
-    if (tmp.length > 0) {
-      payload.runtimeLogs.stderr = [...tmp.split("\r\n")];
-    }
-    message = "👉 取得 L05 SQL連線紀錄檔 sqlnet.log ... ";
-    utils.log(__basename, message);
-    tmp = await readLastLines.read(config.l05.logs.sqlnet, config.l05.logs.lines);
-    if (tmp.length > 0) {
-      payload.runtimeLogs.sqlnet = [...tmp.split("\r\n")];
-    }
+    // message = "👉 取得 L05 執行期間紀錄檔 stdout.log ... ";
+    // utils.log(__basename, message);
+    // let tmp = await readLastLines.read(config.l05.logs.stdout, config.l05.logs.lines);
+    // if (tmp.length > 0) {
+    //   payload.runtimeLogs.stdout = [...tmp.split("\r\n")];
+    // }
+    // message = "👉 取得 L05 執行期間紀錄檔 stderr.log ... ";
+    // utils.log(__basename, message);
+    // tmp = await readLastLines.read(config.l05.logs.stderr, config.l05.logs.lines);
+    // if (tmp.length > 0) {
+    //   payload.runtimeLogs.stderr = [...tmp.split("\r\n")];
+    // }
+    // message = "👉 取得 L05 SQL連線紀錄檔 sqlnet.log ... ";
+    // utils.log(__basename, message);
+    // tmp = await readLastLines.read(config.l05.logs.sqlnet, config.l05.logs.lines);
+    // if (tmp.length > 0) {
+    //   payload.runtimeLogs.sqlnet = [...tmp.split("\r\n")];
+    // }
     // #0 detect if remote server is available
     const remote = await utils.ping({
       host: config.l05.bureauSyncIp,
