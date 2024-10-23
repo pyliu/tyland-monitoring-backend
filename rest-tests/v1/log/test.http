@@ -3,6 +3,18 @@ POST http://127.0.0.1:8082/api/v1/log HTTP/1.1
 content-type: application/json
 
 {
-    "path": "d:/DEV/Land-Affairs-Helper/www/log/log-2024-10-22.log",
+    "path": "d:/DEV/temp/1131023moniter_sms.log",
+    "encoding": "BIG5",
+    "time": "Wed, 23 Oct 2024 15:37:50 GMT"
+}
+
+###
+
+POST http://220.1.34.221:8082/api/v1/log HTTP/1.1
+content-type: application/json
+
+{
+    "path": "C:/SMSWEB_MOI/1131023moniter_sms.log",
+    "encoding": "BIG5",
     "time": "Wed, 23 Oct 2024 15:37:50 GMT"
 }

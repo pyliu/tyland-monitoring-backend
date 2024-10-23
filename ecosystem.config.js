@@ -9,7 +9,7 @@ module.exports = {
     cron_restart: '0 7 * * *',
     time: true,
     watch: true,
-    ignore_watch: ['[/\\]./', 'node_modules', '*.bat', '.git', '.vscode', 'thunder-tests', 'assets', 'logs'],
+    ignore_watch: ['[/\\]./', 'node_modules', '*.bat', '.git', '.vscode', 'rest-tests', 'assets', 'logs'],
     max_memory_restart: '256M',
     env: {
       NODE_ENV: 'production'
