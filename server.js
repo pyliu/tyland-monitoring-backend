@@ -33,10 +33,15 @@ app.use(express.json({limit : parseInt(process.env.UPLOAD_LIMIT) })); // allow m
  const authAPI = require(`./model/api/${config.apiVersion}/auth/auth`);
  authAPI.register(app);
  /**
-  * SystemInformation API
+  * L05 API
   */
 const l05API = require(`./model/api/${config.apiVersion}/l05/index`);
 l05API.register(app);
+/**
+ * LOG API
+ */
+const logAPI = require(`./model/api/${config.apiVersion}/log/index`);
+logAPI.register(app);
  /**
   * SystemInformation API
   */

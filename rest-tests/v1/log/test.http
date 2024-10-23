@@ -3,6 +3,6 @@ POST http://127.0.0.1:8082/api/v1/log HTTP/1.1
 content-type: application/json
 
 {
-    "name": "sample",
-    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+    "path": "d:/DEV/Land-Affairs-Helper/www/log/log-2024-10-22.log",
+    "time": "Wed, 23 Oct 2024 15:37:50 GMT"
 }
