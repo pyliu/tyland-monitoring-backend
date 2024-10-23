@@ -3,7 +3,7 @@ const config = require(path.join(__dirname, "..", "..", "..", "config"));
 const utils = require(path.join(config.rootPath, "model", "utils"));
 const __basename = path.basename(__filename);
 const { parentPort } = require("worker_threads");
-const { pathExistsSync, readFileSync, statSync } = require("fs-extra");
+const { pathExistsSync, readFileSync } = require("fs-extra");
 
 const url = `/${config.apiPrefix}/v1/log`
 
