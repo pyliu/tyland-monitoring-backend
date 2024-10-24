@@ -4,6 +4,7 @@ const utils = require(path.join(config.rootPath, "model", "utils"));
 const __basename = path.basename(__filename);
 const { parentPort } = require("worker_threads");
 const { pathExistsSync, readFileSync } = require("fs-extra");
+const iconv = require('iconv-lite');
 
 const url = `/${config.apiPrefix}/v1/log`
 
@@ -27,7 +28,8 @@ parentPort.on("message", async (params) => {
       if (pathExistsSync(logPath)) {
         message = `👉 ${logPath} 存在，繼續以 ${encoding} 格式讀取檔案內容 ... `;
         utils.log(__basename, message);
-        payload.raw = readFileSync(logPath, encoding);
+        const fileBuffer = readFileSync(logPath);
+        payload.raw = iconv.decode(fileBuffer, 'big5');
         message = `✔ 讀取 ${logPath} 成功。`;
         utils.log(__basename, message);
       } else {
