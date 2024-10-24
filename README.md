@@ -62,3 +62,12 @@
 - /api/v1/network/latency/XXX.XXX.XXX.XXX
 - /api/v1/network/check?target=XXX.XXX.XXX.XXX
 - /api/v1/network/latency?target=XXX.XXX.XXX.XXX
+
+##### L05 service
+- /api/v1/l05
+- /api/v1/l05/log (get recent logs in MySQL DB)
+- /api/v1/l05/log/:findate (get logs in MySQL DB by date)
+
+##### LOG (read file content)
+- /api/v1/log
+
