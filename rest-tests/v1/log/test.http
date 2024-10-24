@@ -3,6 +3,7 @@ content-type: application/json
 
 {
     "path": "d:/DEV/temp/1131023moniter_sms.log",
+    "encoding": "BIG5",
     "time": "Wed, 23 Oct 2024 15:37:50 GMT"
 }
 
@@ -13,5 +14,6 @@ content-type: application/json
 
 {
     "path": "C:/SMSWEB_MOI/1131024moniter_sms.log",
+    "encoding": "BIG5",
     "time": "Wed, 23 Oct 2024 15:37:50 GMT"
 }

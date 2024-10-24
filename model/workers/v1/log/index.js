@@ -29,7 +29,7 @@ parentPort.on("message", async (params) => {
         message = `👉 ${logPath} 存在，繼續以 ${encoding} 格式讀取檔案內容 ... `;
         utils.log(__basename, message);
         const fileBuffer = readFileSync(logPath);
-        payload.raw = iconv.decode(fileBuffer, 'big5');
+        payload.raw = iconv.decode(fileBuffer, encoding);
         message = `✔ 讀取 ${logPath} 成功。`;
         utils.log(__basename, message);
       } else {
