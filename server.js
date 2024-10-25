@@ -87,5 +87,7 @@ siNetworkAPI.register(app);
 
 const SERVER_PORT = process.env.SVR_PORT || 8082;
 app.listen(SERVER_PORT, () => {
-  console.log(`伺服器已於 ${SERVER_PORT} 埠號啟動。`);
+  console.log(`REST API伺服器已於 ${SERVER_PORT} 埠號啟動。`);
 });
+
+require('./model/wss/server')

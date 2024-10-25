@@ -30,7 +30,9 @@ parentPort.on("message", async (params) => {
         utils.log(__basename, message);
         const fileBuffer = readFileSync(logPath);
         payload.raw = iconv.decode(fileBuffer, encoding);
+        response.statusCode = config.statusCode.FAIL_NOT_FOUND;
         message = `✔ 讀取 ${logPath} 成功。`;
+        response.statusCode = config.statusCode.SUCCESS;
         utils.log(__basename, message, payload.raw);
       } else {
         message = `⚠ ${logPath} 不存在！`;
