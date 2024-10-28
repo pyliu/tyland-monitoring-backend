@@ -87,10 +87,9 @@ siNetworkAPI.register(app);
 
 const SERVER_PORT = process.env.SVR_PORT || 8082;
 const server = app.listen(SERVER_PORT, () => {
-  console.log(`REST API伺服器已於 ${SERVER_PORT} 埠號啟動。`);
+  console.log(`REST API伺服器已於 ${utils.ip}:${SERVER_PORT} 埠號啟動。`);
 });
 
-// require('./model/wss/server')
 /**
  * Start WebSocket Server
  */
@@ -104,9 +103,9 @@ try{
   wss.on('connection', function connection (ws, req) {
     ws.wss = this // reference to the server
     ws.isAlive = true
-    ws.on('pong', function heartbeat () {
+    ws.on('pong', function heartbeat (data) {
       // only ws has user info is treated as alive
-      this.isAlive = typeof this.user === 'object'
+      utils.log('連線客戶端資料', data)
     })
 
     ws.on('message', function incoming (message) {
@@ -126,8 +125,6 @@ try{
     ws.on('close', function close () {
       const disconnected_user = this.user
       if (disconnected_user) {
-        const message = `${disconnected_user.userid} / ${disconnected_user.username} / ${disconnected_user.ip} 連線已中斷`
-        utils.log(message)
         // send user_disconnected command to all ws clients
         wss?.clients?.forEach((ws) => {
           utils.sendCommand(ws, {

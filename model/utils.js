@@ -5,13 +5,58 @@ const config = require(path.join(__dirname, "config"));
 const { ping } = require('tcp-ping-node');
 const { spawn } = require("child_process");
 const HTTPStatusCodes = require("http-status-codes").StatusCodes;
+const shell = require('node-powershell');
 
 const Cache = require("file-system-cache").default;
 const fsCache = Cache({
   basePath: path.join(__dirname, "..", "assets", config.cachePath),
   ns: "tyland",
 });
-
+/**
+ * collect OS network interface info
+ */
+const os = require('os');
+const networkInterfaces = os.networkInterfaces();
+const ips = [];
+for (const name of Object.keys(networkInterfaces)) {
+  for (const net of networkInterfaces[name]) {
+    // only IPv4 and starts with '220.1.' or '192.168.'
+    if (net.family === 'IPv4' && (net.address?.startsWith('220.1.') || net.address?.startsWith('192.168.'))) {
+      ips.push(net.address);
+    }
+  }
+}
+const ip = ips.length > 0 ? ips[ips.length - 1] : 'N/A';
+(config.isDev || config.isDebug) && console.log && console.log('Found IPs', ips, 'Choosed the last one', ip);
+/**
+ * 
+ * @param {string} pathORcommand - a file path, e.g. XXXX.ps1, OR a command, e.g. 'Get-Process'
+ * @param {*} args - parameters for the command
+ * @returns 
+ */
+async function runPowerShell(pathORcommand, args = {}) {
+  return new Promise((resolve, reject) => {
+    const opts = {
+      ...{
+        executionPolicy: 'Bypass',
+        noProfile: true
+      },
+      ...args
+    }
+    const ps = new shell(opts);
+    ps.addCommand(pathORcommand);
+    ps.invoke()
+    .then(output => {
+      console.log(output);
+      resolve(output);
+    })
+    .catch(err => {
+      console.log(err);
+      ps.dispose();
+      reject(err);
+    });
+  });
+}
 /**
  * @param {string} executable
  * @param {string[]} args
@@ -50,6 +95,18 @@ async function runExecutable(executable, args, opts = {}) {
 const log = function (...args) {
   if ((config.isDev || config.isDebug) && console.log) {
     console.log(...args);
+  }
+}
+
+const warn = function (...args) {
+  if (console.warn) {
+    console.warn(...args);
+  }
+}
+
+const error = function (...args) {
+  if (console.error) {
+    console.error(...args);
   }
 }
 
@@ -168,7 +225,34 @@ const registerWorker = function (res, worker, params = {}) {
   worker?.postMessage(params);
 };
 
+const packWSMessage = function (payload, opts = {}) {
+  const args = {
+    ...{
+      type: 'SVR',
+      id: '0',
+      sender: process.env.SVR_NAME,
+      date: timestamp('date'),
+      time: timestamp('time'),
+      message: payload,
+      from: ip,
+      channel: 'blackhole'
+    },
+    ...opts
+  }
+  if (typeof args.message === 'string') {
+    args.message = trim(marked.parse(args.message, { sanitizer: DOMPurify.sanitize }))
+    // markd generated message into <p>....</p>
+    const innerText = args.message.replace(/(<p[^>]+?>|<p>|<\/p>)/img, '')
+    // test if the inner text contain HTML element
+    if (!/<\/?[a-z][\s\S]*>/i.test(innerText)) {
+      args.message = args.message.replace(/(?:\r\n|\r|\n)/g, '<br/>')
+    }
+  }
+  return JSON.stringify(args)
+}
+
 module.exports = {
+  ip,
   timestamp,
   timestampToDate,
   trim,
@@ -178,6 +262,7 @@ module.exports = {
   registerWorker,
   badRequest,
   runExecutable,
+  runPowerShell,
   cache: {
     get: function (key) {
       let data = undefined;
@@ -230,5 +315,7 @@ module.exports = {
     },
   },
   ping,
-  log
+  log,
+  warn,
+  error
 };
