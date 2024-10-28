@@ -57,7 +57,7 @@ const config = {
   svrDesc: process.env.SVR_DESC,
   isDev: process.env.NODE_ENV !== 'production',
   isProd: process.env.NODE_ENV === 'production',
-  isDebug: process.env.DEBUG?.toUpperCase() === 'YES',
+  isDebug: ['YES', 'Y', 'TRUE', '1', 'T'].includes(process.env.DEBUG?.toUpperCase()),
   apiPrefix: 'api',
   apiVersion: 'v1',
   rootPath: require('path').resolve('./'),
