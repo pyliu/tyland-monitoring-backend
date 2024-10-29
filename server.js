@@ -102,10 +102,12 @@ try{
   // new connection handler for remote client
   wss.on('connection', function connection (ws, req) {
     ws.wss = this // reference to the server
+
     ws.isAlive = true
     ws.on('pong', function heartbeat (data) {
-      // only ws has user info is treated as alive
-      utils.log('連線客戶端資料', data)
+      // received pong treated as alive
+      // utils.log('收到PONG')
+      ws.isAlive = true
     })
 
     ws.on('message', function incoming (message) {
@@ -126,7 +128,7 @@ try{
     utils.log(`已連線客戶數 ${[...wss.clients].length}`)
   })
 
-  // remove dead connection every 30s
+  // remove dead connections every 30s
   const interval = setInterval(function ping () {
     wss.clients.forEach(function each (ws) {
       if (ws.isAlive === false) {
@@ -139,6 +141,9 @@ try{
 
   wss.on('close', function close () {
     clearInterval(interval)
+    wss.clients.forEach(function each (ws) {
+      return ws.terminate()
+    })
   })
 
   console.log(utils.timestamp(), `WebSocket伺服器已隨API伺服器啟動。`)

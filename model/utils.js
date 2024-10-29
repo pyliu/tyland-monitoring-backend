@@ -96,7 +96,7 @@ const trim = (x) => {
   return typeof x === "string" ? x.replace(/^[\s\r\n]+|[\s\r\n]+$/gm, "") : "";
 };
 
-const timestamp = function (date = "time", showMs = false) {
+const timestamp = function (date = "time", showMs = true) {
   const now = new Date();
 
   const year = now.getFullYear()
@@ -207,30 +207,12 @@ const registerWorker = function (res, worker, params = {}) {
   worker?.postMessage(params);
 };
 
-const packWSMessage = function (payload, opts = {}) {
-  const args = {
-    ...{
-      type: 'SVR',
-      id: '0',
-      sender: process.env.SVR_NAME,
-      date: timestamp('date'),
-      time: timestamp('time'),
-      message: payload,
-      from: ip,
-      channel: 'blackhole'
-    },
-    ...opts
+const packWsData = function (json) {
+  const tmp = {
+    binary: false,
+    ...json
   }
-  if (typeof args.message === 'string') {
-    args.message = trim(marked.parse(args.message, { sanitizer: DOMPurify.sanitize }))
-    // markd generated message into <p>....</p>
-    const innerText = args.message.replace(/(<p[^>]+?>|<p>|<\/p>)/img, '')
-    // test if the inner text contain HTML element
-    if (!/<\/?[a-z][\s\S]*>/i.test(innerText)) {
-      args.message = args.message.replace(/(?:\r\n|\r|\n)/g, '<br/>')
-    }
-  }
-  return JSON.stringify(args)
+  return JSON.stringify(tmp)
 }
 
 module.exports = {
@@ -244,6 +226,7 @@ module.exports = {
   badRequest,
   runExecutable,
   runPowerShell,
+  packWsData,
   cache: {
     get: function (key) {
       let data = undefined;
