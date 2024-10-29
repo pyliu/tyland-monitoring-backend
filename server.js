@@ -87,7 +87,7 @@ siNetworkAPI.register(app);
 
 const SERVER_PORT = process.env.SVR_PORT || 8082;
 const server = app.listen(SERVER_PORT, () => {
-  console.log(`REST API伺服器已於 ${utils.ip}:${SERVER_PORT} 埠號啟動。`);
+  console.log(utils.timestamp(), `REST API伺服器已於 ${utils.ip}:${SERVER_PORT} 埠號啟動。`);
 });
 
 /**
@@ -109,59 +109,41 @@ try{
     })
 
     ws.on('message', function incoming (message) {
+      // 分派訊息給各工作物件
       const processedMessage = handler.handle(this, message)
       if (processedMessage === false) {
         utils.log('處理訊息失敗', message)
-        this.send(utils.packMessage(`WS伺服器無法處理您的請求 ${message}`))
+        this.send(`WS伺服器無法處理您的請求 ${message}`)
       } else if (processedMessage === true) {
         utils.log('處理訊息成功')
-      } else if (!utils.isEmpty(processedMessage)) {
-        this.send(utils.packMessage(processedMessage, { channel: this.user.userid }))
-      } else {
-        utils.log('處理訊息後無回傳值，無法處理給客戶端回應', message)
-      }
+      } 
     })
 
     ws.on('close', function close () {
-      const disconnected_user = this.user
-      if (disconnected_user) {
-        // send user_disconnected command to all ws clients
-        wss?.clients?.forEach((ws) => {
-          utils.sendCommand(ws, {
-            command: 'user_disconnected',
-            payload: disconnected_user,
-            message: `${disconnected_user.username} 已離線`
-          })
-        })
-      } else {
-        utils.warn('WebSocket內沒有使用者資訊')
-      }
-      utils.log(`目前已連線客戶數 ${[...wss.clients].length}`)
+      utils.log(`已連線客戶數 ${[...wss.clients].length}`)
     })
 
-    utils.log(`目前已連線客戶數 ${[...wss.clients].length}`)
+    utils.log(`已連線客戶數 ${[...wss.clients].length}`)
   })
 
-  // remove dead connection every 20s
+  // remove dead connection every 30s
   const interval = setInterval(function ping () {
     wss.clients.forEach(function each (ws) {
       if (ws.isAlive === false) {
-        ws.user && utils.log(`偵測到 ${ws.user.dept} / ${ws.user.userid} 的連線已中斷。`)
-        !ws.user && utils.log('偵測到無使用者資訊的連線，斷線 ... ')
         return ws.terminate()
       }
       ws.isAlive = false
       ws.ping(function noop () {})
     })
-  }, 20000)
+  }, 30 * 1000)
 
   wss.on('close', function close () {
     clearInterval(interval)
   })
 
-  console.log(`WebSocket伺服器已隨API伺服器啟動。`)
+  console.log(utils.timestamp(), `WebSocket伺服器已隨API伺服器啟動。`)
 } catch (e) {
-  console.error('WebSocket伺服器啟動失敗', e)
+  console.error(utils.timestamp(), 'WebSocket伺服器啟動失敗', e)
 } finally {
 // finally。
 }

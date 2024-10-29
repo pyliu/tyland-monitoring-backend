@@ -92,24 +92,6 @@ async function runExecutable(executable, args, opts = {}) {
   });
 }
 
-const log = function (...args) {
-  if ((config.isDev || config.isDebug) && console.log) {
-    console.log(...args);
-  }
-}
-
-const warn = function (...args) {
-  if (console.warn) {
-    console.warn(...args);
-  }
-}
-
-const error = function (...args) {
-  if (console.error) {
-    console.error(...args);
-  }
-}
-
 const trim = (x) => {
   return typeof x === "string" ? x.replace(/^[\s\r\n]+|[\s\r\n]+$/gm, "") : "";
 };
@@ -139,22 +121,23 @@ const timestamp = function (date = "time") {
   }
 };
 
-const timestampToDate = function (ts) {
-  const d = new Date(ts);
-  return (
-    d.getFullYear() +
-    "-" +
-    ("0" + (d.getMonth() + 1)).slice(-2) +
-    "-" +
-    ("0" + d.getDate()).slice(-2) +
-    " " +
-    ("0" + d.getHours()).slice(-2) +
-    ":" +
-    ("0" + d.getMinutes()).slice(-2) +
-    ":" +
-    ("0" + d.getSeconds()).slice(-2)
-  );
-};
+const log = function (...args) {
+  if ((config.isDev || config.isDebug) && console.log) {
+    console.log(timestamp(), ...args);
+  }
+}
+
+const warn = function (...args) {
+  if (console.warn) {
+    console.warn(timestamp(), ...args);
+  }
+}
+
+const error = function (...args) {
+  if (console.error) {
+    console.error(timestamp(), ...args);
+  }
+}
 
 const sleep = function (ms = 0) {
   return new Promise((r) => setTimeout(r, ms));
@@ -254,7 +237,6 @@ const packWSMessage = function (payload, opts = {}) {
 module.exports = {
   ip,
   timestamp,
-  timestampToDate,
   trim,
   sleep,
   isEmpty,
