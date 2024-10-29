@@ -2,11 +2,11 @@ module.exports = {
   apps: [{
     name: 'tyland-monitoring-backend',
     exec_mode: 'cluster',
-    instances: 2,
+    instances: 1,
     script: './server.js',
     out_file: './logs/backend_out.log',
     error_file: './logs/backend_err.log',
-    cron_restart: '0 7 * * *',
+    cron_restart: '50 7 * * *',
     time: true,
     watch: true,
     ignore_watch: ['[/\\]./', 'node_modules', '*.bat', '.git', '.vscode', 'rest-tests', 'assets', 'logs'],
