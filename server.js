@@ -104,6 +104,7 @@ try{
     ws.wss = this // reference to the server
 
     ws.isAlive = true
+    ws.remoteAddress = req.socket.remoteAddress
     ws.on('pong', function heartbeat (data) {
       // received pong treated as alive
       // utils.log('收到PONG')
@@ -128,10 +129,10 @@ try{
     })
 
     ws.on('close', function close () {
-      utils.log(`已連線客戶數 ${[...wss.clients].length}`)
+      utils.log(`${this.remoteAddress}已離線，目前總連線數 ${[...wss.clients].length}`)
     })
 
-    utils.log(`已連線客戶數 ${[...wss.clients].length}`)
+    utils.log(`${ws.remoteAddress}已連線，目前總連線數 ${[...wss.clients].length}`)
   })
 
   // remove dead connections every 30s
