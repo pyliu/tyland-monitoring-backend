@@ -17,24 +17,25 @@ class ReadFileCommand {
     const mime = require('mime-types');
     if (fs.existsSync(this.json.path)) {
       fs.readFile(this.json.path).then((data) => {
-        const message = `已讀取 ${data.length} bytes`
+        const filename = path.basename(this.json.path)
+        const message = `已讀取 ${filename} ${data.length} bytes`
         utils.log(message)
         const base64 = data.toString('base64')
         this.ws.send(utils.packWsData({
-          command: '@ack_read_file',
+          command: '@read_file_ack',
           success: true,
           payload: {
             binary: true,
-            filename: path.basename(this.json.path),
             mime: mime.lookup(this.json.path),
             data: base64,
-            message
+            message,
+            filename
           }
         }))
-        utils.log(`已傳送 Binary Data 回客戶端`)
+        utils.log(`已傳送檔案 ${filename} 回 ${this.ws.remoteAddress}`)
       }).catch((e) => {
         this.ws.send(utils.packWsData({
-          command: '@ack_read_file',
+          command: '@read_file_ack',
           success: false,
           payload: {
             binary: false,
@@ -47,7 +48,7 @@ class ReadFileCommand {
     const message = `${this.json.path}不存在`
     utils.log(message)
     this.ws.send(utils.packWsData({
-      command: '@ack_read_file',
+      command: '@read_file_ack',
       success: false,
       payload: {
         binary: false,
