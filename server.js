@@ -114,10 +114,16 @@ try{
       // 分派訊息給各工作物件
       const processedMessage = handler.handle(this, message)
       if (processedMessage === false) {
-        utils.log('處理訊息失敗', message)
-        this.send(`WS伺服器無法處理您的請求 ${message}`)
+        utils.log('WSS: 處理訊息失敗')
+        this.send(utils.packWsData({
+          command: '@ack_server',
+          success: false,
+          payload: {
+            message: 'WS伺服器無法處理您的請求'
+          }
+        }))
       } else if (processedMessage === true) {
-        utils.log('處理訊息成功')
+        utils.log('WSS: 處理訊息成功')
       } 
     })
 

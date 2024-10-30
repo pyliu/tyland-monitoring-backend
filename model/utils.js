@@ -209,7 +209,7 @@ const registerWorker = function (res, worker, params = {}) {
 
 const packWsData = function (json) {
   const tmp = {
-    binary: false,
+    success: false,
     ...json
   }
   return JSON.stringify(tmp)
