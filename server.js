@@ -3,6 +3,7 @@ const config = require('./model/config');
 const utils = require('./model/utils');
 const compression = require("compression");
 const express = require("express");
+const helmet = require('helmet');
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const path = require("path");
@@ -18,6 +19,7 @@ const app = express();
 app.use(compression()); // compress all responses
 app.use(express.static(dirName)); // to access the files in `${dirName}` folder
 app.use(cors()); // it enables all cors requests
+app.use(helmet());
 app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({limit : parseInt(process.env.UPLOAD_LIMIT) })); // allow maximum size json payload
@@ -152,6 +154,10 @@ try{
       return ws.terminate()
     })
   })
+
+  /**
+   * Other operation when WS server started
+   */
 
   console.log(utils.timestamp(), `WebSocket伺服器已隨API伺服器啟動。`)
 } catch (e) {

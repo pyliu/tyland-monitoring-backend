@@ -108,4 +108,6 @@ yarn.lock
 package-lock.json
 pnpm-lock.yaml
 
+# project relative not gitting dirs
 assets/
+.cert
