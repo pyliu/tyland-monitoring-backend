@@ -19,7 +19,7 @@ const app = express();
 app.use(compression()); // compress all responses
 app.use(express.static(dirName)); // to access the files in `${dirName}` folder
 app.use(cors()); // it enables all cors requests
-app.use(helmet());
+app.use(helmet());  // Helmet 會適當設定 HTTP 標頭，有助於防範您的應用程式出現已知的 Web 漏洞。
 app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({limit : parseInt(process.env.UPLOAD_LIMIT) })); // allow maximum size json payload
