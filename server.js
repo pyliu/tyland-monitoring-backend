@@ -7,8 +7,13 @@ const helmet = require('helmet');
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const path = require("path");
+
 // const https = require('https');
 // const fs = require("fs-extra");
+// const options = {
+//   key: fs.readFileSync(`assets/key/key.pem`),
+//   cert: fs.readFileSync(`assets/key/cert.pem`),
+// }
 
 const dirName = config.uploadPath;
 require("./model/initialize")();
@@ -88,6 +93,36 @@ siNetworkAPI.register(app);
 // });
 
 const SERVER_PORT = process.env.SVR_PORT || 8082;
+/**
+ * Not using HTTPS because there is no way to ignore certificate checking on client BROWSER without cert installation to root CA
+ */
+// const server =  https.createServer(options, app);
+// server.on('error', (error) => {
+//   if (error.syscall !== 'listen') {
+//     throw error
+//   }
+
+//   var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port
+
+//   // handle specific listen errors with friendly messages
+//   switch (error.code) {
+//     case 'EACCES':
+//       console.error(bind + ' 需要提升權限')
+//       process.exit(1)
+//       break
+//     case 'EADDRINUSE':
+//       console.error(bind + ' 已經被占用')
+//       process.exit(1)
+//       break
+//     default:
+//       throw error
+//   }
+// })
+// server.listen(SERVER_PORT,() => {
+//   const addr = server.address();
+//   (config.isDev || config.isDebug) && console.log(addr);
+//   console.log(utils.timestamp(), `HTTPS REST API伺服器已於 ${utils.ip}:${addr.port} 埠號啟動。`);
+// });
 const server = app.listen(SERVER_PORT, () => {
   console.log(utils.timestamp(), `REST API伺服器已於 ${utils.ip}:${SERVER_PORT} 埠號啟動。`);
 });
