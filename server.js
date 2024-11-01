@@ -132,10 +132,10 @@ const server = app.listen(SERVER_PORT, () => {
  */
 const WebSocket = require('ws')
 const RequestHandler = require(path.join(__dirname, 'model', 'wss', 'request-handler.js'))
+const DBWatcher = require(path.join(__dirname, 'model', 'db-watcher.js'))
 try{
   // initialize WS server
   const wss = new WebSocket.Server({ server })
-  const handler = new RequestHandler(wss)
   // new connection handler for remote client
   wss.on('connection', function connection (ws, req) {
     ws.wss = this // reference to the server
@@ -171,7 +171,6 @@ try{
 
     utils.log(`${ws.remoteAddress}已連線，目前總連線數 ${[...wss.clients].length}`)
   })
-
   // remove dead connections every 30s
   const interval = setInterval(function ping () {
     wss.clients.forEach(function each (ws) {
@@ -193,6 +192,8 @@ try{
   /**
    * Other operation when WS server started
    */
+  const handler = new RequestHandler(wss)
+  const watcher = new DBWatcher(wss)
 
   console.log(utils.timestamp(), `WebSocket伺服器已隨API伺服器啟動。`)
 } catch (e) {
