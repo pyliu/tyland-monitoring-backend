@@ -16,7 +16,7 @@ class DBWatcher {
       
         // ignore .txt files
         // ignored: (file) => file.endsWith('.txt'),
-        // watch only .txt files
+        // watch only .db files
         ignored: (file, _stats) => _stats?.isFile() && !file.endsWith('.db'),
       
         awaitWriteFinish: true, // emit single event when chunked writes are completed
