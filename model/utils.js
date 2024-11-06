@@ -120,21 +120,29 @@ const timestamp = function (date = "time", showMs = true) {
   }
 };
 
+const timestampOutput = (config.isDev || config.isDebug)
+
 const log = function (...args) {
   if ((config.isDev || config.isDebug) && console.log) {
-    console.log(config.isDev || config.isDebug ? timestamp() : '', ...args);
+    timestampOutput ?
+      console.log(timestamp(), ...args) :
+      console.log(...args);
   }
 }
 
 const warn = function (...args) {
   if (console.warn) {
-    console.warn(config.isDev || config.isDebug ? timestamp() : '', ...args);
+    timestampOutput ?
+      console.warn(timestamp(), ...args) :
+      console.warn(...args);
   }
 }
 
 const error = function (...args) {
   if (console.error) {
-    console.error(config.isDev || config.isDebug ? timestamp() : '', ...args);
+    timestampOutput ?
+      console.error(timestamp(), ...args) :
+      console.error(...args);
   }
 }
 
