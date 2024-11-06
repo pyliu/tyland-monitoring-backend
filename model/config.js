@@ -58,6 +58,7 @@ const config = {
   isDev: process.env.NODE_ENV !== 'production',
   isProd: process.env.NODE_ENV === 'production',
   isDebug: ['YES', 'Y', 'TRUE', '1', 'T'].includes(process.env.DEBUG?.toUpperCase()),
+  printTSLog: process.env.NODE_ENV !== 'production' || ['YES', 'Y', 'TRUE', '1', 'T'].includes(process.env.DEBUG?.toUpperCase()),
   apiPrefix: 'api',
   apiVersion: 'v1',
   rootPath: require('path').resolve('./'),

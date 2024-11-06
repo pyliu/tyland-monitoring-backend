@@ -120,11 +120,9 @@ const timestamp = function (date = "time", showMs = true) {
   }
 };
 
-const timestampOutput = (config.isDev || config.isDebug)
-
 const log = function (...args) {
   if ((config.isDev || config.isDebug) && console.log) {
-    timestampOutput ?
+    config.printTSLog ?
       console.log(timestamp(), ...args) :
       console.log(...args);
   }
@@ -132,7 +130,7 @@ const log = function (...args) {
 
 const warn = function (...args) {
   if (console.warn) {
-    timestampOutput ?
+    config.printTSLog ?
       console.warn(timestamp(), ...args) :
       console.warn(...args);
   }
@@ -140,7 +138,7 @@ const warn = function (...args) {
 
 const error = function (...args) {
   if (console.error) {
-    timestampOutput ?
+    config.printTSLog ?
       console.error(timestamp(), ...args) :
       console.error(...args);
   }
