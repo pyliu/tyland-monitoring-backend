@@ -122,19 +122,19 @@ const timestamp = function (date = "time", showMs = true) {
 
 const log = function (...args) {
   if ((config.isDev || config.isDebug) && console.log) {
-    console.log(timestamp(), ...args);
+    console.log(config.isDev || config.isDebug ? timestamp() : '', ...args);
   }
 }
 
 const warn = function (...args) {
   if (console.warn) {
-    console.warn(timestamp(), ...args);
+    console.warn(config.isDev || config.isDebug ? timestamp() : '', ...args);
   }
 }
 
 const error = function (...args) {
   if (console.error) {
-    console.error(timestamp(), ...args);
+    console.error(config.isDev || config.isDebug ? timestamp() : '', ...args);
   }
 }
 

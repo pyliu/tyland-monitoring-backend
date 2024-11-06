@@ -124,7 +124,7 @@ const SERVER_PORT = process.env.SVR_PORT || 8082;
 //   console.log(utils.timestamp(), `HTTPS REST API伺服器已於 ${utils.ip}:${addr.port} 埠號啟動。`);
 // });
 const server = app.listen(SERVER_PORT, () => {
-  console.log(utils.timestamp(), `REST API伺服器已於 ${utils.ip}:${SERVER_PORT} 埠號啟動。`);
+  console.log(config.isDev || config.isDebug ? utils.timestamp() : '', `REST API伺服器已於 ${utils.ip}:${SERVER_PORT} 埠號啟動。`);
 });
 
 /**
@@ -195,9 +195,9 @@ try{
   const handler = new RequestHandler(wss)
   const watcher = new DBWatcher(wss)
 
-  console.log(utils.timestamp(), `WebSocket伺服器已隨API伺服器啟動。`)
+  console.log(config.isDev || config.isDebug ? utils.timestamp() : '', `WebSocket伺服器已隨API伺服器啟動。`)
 } catch (e) {
-  console.error(utils.timestamp(), 'WebSocket伺服器啟動失敗', e)
+  console.error(config.isDev || config.isDebug ? utils.timestamp() : '', 'WebSocket伺服器啟動失敗', e)
 } finally {
 // finally。
 }
