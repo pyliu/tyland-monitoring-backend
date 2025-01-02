@@ -84,10 +84,10 @@ parentPort.on("message", async (params) => {
               payload.files.push(stats);
             }
           })
-          if (!payload.loading.pid) {
-            message = `(未偵測到同步程式 ${config.l05.processName}.exe)`;
-          }
           // payload.files = [...files];
+        }
+        if (!payload.loading.pid) {
+          message = `(未偵測到同步程式 ${config.l05.processName}.exe)`;
         }
         // getting MySQL logs
         try {

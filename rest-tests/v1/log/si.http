@@ -1,1 +1,10 @@
 GET http://220.1.34.221:8082/api/v1/processes HTTP/1.1
+### 
+# process
+GET http://220.1.34.17:8082/api/v1/processes HTTP/1.1
+### 
+# l05
+GET http://220.1.34.17:8082/api/v1/l05 HTTP/1.1
+### 
+# printer
+GET http://220.1.34.17:8082/api/v1/printer HTTP/1.1
