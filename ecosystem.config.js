@@ -8,7 +8,7 @@ module.exports = {
     error_file: './logs/backend_err.log',
     cron_restart: '50 7 * * *',
     time: true,
-    watch: true,
+    watch: false,
     ignore_watch: ['[/\\]./', 'node_modules', '*.bat', '.git', '.vscode', 'rest-tests', 'assets', 'logs'],
     max_memory_restart: '256M',
     env: {
