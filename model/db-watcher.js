@@ -11,7 +11,9 @@ class DBWatcher {
       // watch db folder for changes
       // https://github.com/paulmillr/chokidar, more flexible watcher project
       const chokidar = require('chokidar')
-      DBWatcher._instance.watcher = chokidar.watch(path.join(__dirname, '..', 'assets', 'db'), {
+      const watchDir = path.join(__dirname, '..', 'assets', 'db')
+      DBWatcher._instance.watchDir = watchDir
+      DBWatcher._instance.watcher = chokidar.watch(watchDir, {
         persistent: true,
       
         // ignore .txt files
@@ -42,7 +44,10 @@ class DBWatcher {
         alwaysStat: false,
       })
       // One-liner for current directory
-      this.watcher.on('all', this.watchHandler);// Add event listeners.
+      this.watcher
+        .on('all', this.watchHandler)
+        .on('ready', () => utils.info(`DBWatcher: 已就緒，正在監聽 ${watchDir} (*.db)`))
+        .on('error', (error) => utils.error('DBWatcher 發生錯誤:', error))
       // const log = utils.log.bind(utils)
       // this.watcher
       //   .on('add', path => log(`File ${path} has been added`))
@@ -66,7 +71,7 @@ class DBWatcher {
   watchHandler (evt, fpath) {
     // To watch *.db files modification
     const filename = path.basename(fpath, '.db')
-    utils.log(evt, fpath, filename)
+    utils.info(`DBWatcher [${evt}]: ${fpath} (${filename})`)
   }
 }
 module.exports = DBWatcher

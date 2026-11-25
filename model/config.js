@@ -59,6 +59,10 @@ const config = {
   isProd: process.env.NODE_ENV === 'production',
   isDebug: ['YES', 'Y', 'TRUE', '1', 'T'].includes(process.env.DEBUG?.toUpperCase()),
   printTSLog: process.env.NODE_ENV !== 'production' || ['YES', 'Y', 'TRUE', '1', 'T'].includes(process.env.DEBUG?.toUpperCase()),
+  heartbeatLogIntervalMs: (() => {
+    const val = parseInt(process.env.HEARTBEAT_LOG_INTERVAL_MS, 10);
+    return Number.isNaN(val) ? 60 * 1000 : val;
+  })(),
   apiPrefix: 'api',
   apiVersion: 'v1',
   rootPath: require('path').resolve('./'),

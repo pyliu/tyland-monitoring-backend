@@ -30,6 +30,24 @@ app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({limit : parseInt(process.env.UPLOAD_LIMIT) })); // allow maximum size json payload
 
+// HTTP 請求日誌中介軟體
+app.use((req, res, next) => {
+  const startTime = Date.now();
+  const clientIp = req.ip || req.socket?.remoteAddress || 'unknown';
+  res.on('finish', () => {
+    const duration = Date.now() - startTime;
+    const msg = `HTTP ${req.method} ${req.originalUrl} -> ${res.statusCode} (${duration}ms) [${clientIp}]`;
+    if (res.statusCode >= 500) {
+      utils.error(msg);
+    } else if (res.statusCode >= 400) {
+      utils.warn(msg);
+    } else {
+      utils.info(msg);
+    }
+  });
+  next();
+});
+
 /**
  * Server Info API
  */
@@ -125,7 +143,15 @@ const SERVER_PORT = process.env.SVR_PORT || 8082;
 //   console.log(utils.timestamp(), `HTTPS REST API伺服器已於 ${utils.ip}:${addr.port} 埠號啟動。`);
 // });
 const server = app.listen(SERVER_PORT, () => {
-  console.log(config.printTSLog ? utils.timestamp() : '', `REST API伺服器已於 ${utils.ip}:${SERVER_PORT} 埠號啟動。`);
+  utils.info(`REST API伺服器已於 ${utils.ip}:${SERVER_PORT} 埠號啟動 (NODE_ENV=${process.env.NODE_ENV || 'development'}, DEBUG=${config.isDebug})。`);
+  if (typeof process.send === 'function') {
+    process.send('ready');
+    utils.info('已發送 PM2 ready 訊號。');
+  }
+});
+
+server.on('error', (err) => {
+  utils.error('REST API伺服器發生錯誤:', err);
 });
 
 /**
@@ -134,9 +160,13 @@ const server = app.listen(SERVER_PORT, () => {
 const WebSocket = require('ws')
 const RequestHandler = require(path.join(__dirname, 'model', 'wss', 'request-handler.js'))
 const DBWatcher = require(path.join(__dirname, 'model', 'db-watcher.js'))
+let wss = null
+let wsPingInterval = null
+let heartbeatLogTimer = null
+
 try{
   // initialize WS server
-  const wss = new WebSocket.Server({ server })
+  wss = new WebSocket.Server({ server })
   // new connection handler for remote client
   wss.on('connection', function connection (ws, req) {
     ws.wss = this // reference to the server
@@ -153,7 +183,7 @@ try{
       // 分派訊息給各工作物件
       const processedMessage = handler.handle(this, message)
       if (processedMessage === false) {
-        utils.log('WSS: 處理訊息失敗')
+        utils.warn(`WSS: 處理來自 ${this.remoteAddress} 的訊息失敗`)
         this.send(utils.packWsData({
           command: '@ack_server',
           success: false,
@@ -162,20 +192,30 @@ try{
           }
         }))
       } else if (processedMessage === true) {
-        utils.log('WSS: 處理訊息成功')
+        utils.log(`WSS: 處理來自 ${this.remoteAddress} 的訊息成功`)
       } 
     })
 
-    ws.on('close', function close () {
-      utils.log(`${this.remoteAddress}已離線，目前總連線數 ${[...wss.clients].length}`)
+    ws.on('error', function wsError (err) {
+      utils.error(`WSS 客戶端 (${this.remoteAddress}) 發生錯誤:`, err)
     })
 
-    utils.log(`${ws.remoteAddress}已連線，目前總連線數 ${[...wss.clients].length}`)
+    ws.on('close', function close (code, reason) {
+      utils.info(`WSS: ${this.remoteAddress} 已離線 (code=${code}, reason=${reason?.toString() || '無'})，目前總連線數 ${[...wss.clients].length}`)
+    })
+
+    utils.info(`WSS: ${ws.remoteAddress} 已連線，目前總連線數 ${[...wss.clients].length}`)
   })
+
+  wss.on('error', function wssError (err) {
+    utils.error('WebSocket伺服器發生錯誤:', err)
+  })
+
   // remove dead connections every 30s
-  const interval = setInterval(function ping () {
+  wsPingInterval = setInterval(function ping () {
     wss.clients.forEach(function each (ws) {
       if (ws.isAlive === false) {
+        utils.warn(`WSS: 偵測到 ${ws.remoteAddress} 心跳逾時，強制中斷連線`)
         return ws.terminate()
       }
       ws.isAlive = false
@@ -184,7 +224,7 @@ try{
   }, 30 * 1000)
 
   wss.on('close', function close () {
-    clearInterval(interval)
+    clearInterval(wsPingInterval)
     wss.clients.forEach(function each (ws) {
       return ws.terminate()
     })
@@ -196,9 +236,56 @@ try{
   const handler = new RequestHandler(wss)
   const watcher = new DBWatcher(wss)
 
-  console.log(config.printTSLog ? utils.timestamp() : '', `WebSocket伺服器已隨API伺服器啟動。`)
+  utils.info(`WebSocket伺服器已隨API伺服器啟動。`)
 } catch (e) {
-  console.error(config.printTSLog ? utils.timestamp() : '', 'WebSocket伺服器啟動失敗', e)
-} finally {
-// finally。
+  utils.error('WebSocket伺服器啟動失敗', e)
 }
+
+/**
+ * 背景健康心跳日誌，讓監管工具可持續確認服務運作狀態
+ */
+if (config.heartbeatLogIntervalMs > 0) {
+  heartbeatLogTimer = setInterval(() => {
+    const memMB = (process.memoryUsage().rss / 1024 / 1024).toFixed(1);
+    const uptimeSec = Math.floor(process.uptime());
+    const wsCount = wss ? wss.clients.size : 0;
+    utils.info(`服務運作中 | Uptime: ${uptimeSec}s | 記憶體(RSS): ${memMB} MB | WS連線數: ${wsCount}`);
+  }, config.heartbeatLogIntervalMs);
+  if (typeof heartbeatLogTimer.unref === 'function') {
+    heartbeatLogTimer.unref();
+  }
+  utils.info(`已啟用背景心跳日誌，每 ${Math.round(config.heartbeatLogIntervalMs / 1000)} 秒輸出一次狀態。`);
+}
+
+/**
+ * 全域未捕捉例外與優雅關閉處理
+ */
+process.on('uncaughtException', (err) => {
+  utils.error('發生未捕捉的例外 (uncaughtException):', err);
+});
+
+process.on('unhandledRejection', (reason) => {
+  utils.error('發生未處理的 Promise 拒絕 (unhandledRejection):', reason);
+});
+
+const gracefulShutdown = (signal) => {
+  utils.warn(`收到 ${signal} 訊號，準備關閉伺服器...`);
+  if (heartbeatLogTimer) clearInterval(heartbeatLogTimer);
+  if (wsPingInterval) clearInterval(wsPingInterval);
+  if (wss) {
+    wss.close(() => {
+      utils.info('WebSocket伺服器已關閉。');
+    });
+  }
+  server.close(() => {
+    utils.info('REST API伺服器已關閉。');
+    process.exit(0);
+  });
+  setTimeout(() => {
+    utils.error('伺服器關閉逾時，強制結束程序。');
+    process.exit(1);
+  }, 5000).unref();
+};
+
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));

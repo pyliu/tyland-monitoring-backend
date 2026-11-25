@@ -120,27 +120,32 @@ const timestamp = function (date = "time", showMs = true) {
   }
 };
 
+const formatLogArgs = function (level, args) {
+  const prefix = `[${level}]`;
+  return config.printTSLog ? [timestamp(), prefix, ...args] : [prefix, ...args];
+};
+
+const info = function (...args) {
+  if (console.log) {
+    console.log(...formatLogArgs("INFO", args));
+  }
+};
+
 const log = function (...args) {
   if ((config.isDev || config.isDebug) && console.log) {
-    config.printTSLog ?
-      console.log(timestamp(), ...args) :
-      console.log(...args);
+    console.log(...formatLogArgs("DEBUG", args));
   }
 }
 
 const warn = function (...args) {
   if (console.warn) {
-    config.printTSLog ?
-      console.warn(timestamp(), ...args) :
-      console.warn(...args);
+    console.warn(...formatLogArgs("WARN", args));
   }
 }
 
 const error = function (...args) {
   if (console.error) {
-    config.printTSLog ?
-      console.error(timestamp(), ...args) :
-      console.error(...args);
+    console.error(...formatLogArgs("ERROR", args));
   }
 }
 
@@ -197,8 +202,14 @@ const badRequest = function (res, message, statusCode) {
 };
 
 const registerWorker = function (res, worker, params = {}) {
+  const startTime = Date.now();
+  let settled = false;
+
   // listen to message to wait response from worker
   worker?.on("message", (data) => {
+    if (settled) return;
+    settled = true;
+    log(`Worker 回應完成 (${Date.now() - startTime}ms), statusCode=${data?.statusCode}`);
     res
       .status(
         // data.statusCode <= config.statusCode.FAIL
@@ -209,6 +220,32 @@ const registerWorker = function (res, worker, params = {}) {
       )
       .send({ ...data });
   });
+
+  worker?.on("error", (err) => {
+    error("Worker 執行發生未捕捉錯誤:", err);
+    if (!settled && res && !res.headersSent) {
+      settled = true;
+      res.status(HTTPStatusCodes.INTERNAL_SERVER_ERROR).send({
+        statusCode: config.statusCode.FAIL,
+        message: "❌ 背景工作執行失敗",
+        payload: err?.message || String(err)
+      });
+    }
+  });
+
+  worker?.on("exit", (code) => {
+    if (code !== 0 && !settled) {
+      error(`Worker 異常結束，exit code=${code} (${Date.now() - startTime}ms)`);
+      if (res && !res.headersSent) {
+        settled = true;
+        res.status(HTTPStatusCodes.INTERNAL_SERVER_ERROR).send({
+          statusCode: config.statusCode.FAIL,
+          message: `❌ 背景工作異常結束 (code: ${code})`
+        });
+      }
+    }
+  });
+
   // post data to worker thread
   worker?.postMessage(params);
 };
@@ -285,6 +322,7 @@ module.exports = {
     },
   },
   ping,
+  info,
   log,
   warn,
   error
